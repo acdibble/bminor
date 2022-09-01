@@ -1,0 +1,91 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: Identifier,
+        lexeme: "m",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Map,
+        lexeme: "map",
+        line: 0,
+    },
+    Token {
+        kind: String,
+        lexeme: "string",
+        line: 0,
+    },
+    Token {
+        kind: Integer,
+        lexeme: "integer",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: LeftBrace,
+        lexeme: "{",
+        line: 0,
+    },
+    Token {
+        kind: StringLiteral,
+        lexeme: "\"hello\"",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: IntegerLiteral,
+        lexeme: "5",
+        line: 0,
+    },
+    Token {
+        kind: Comma,
+        lexeme: ",",
+        line: 0,
+    },
+    Token {
+        kind: StringLiteral,
+        lexeme: "\"goodbye\"",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: IntegerLiteral,
+        lexeme: "10",
+        line: 0,
+    },
+    Token {
+        kind: RightBrace,
+        lexeme: "}",
+        line: 0,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 0,
+    },
+    Token {
+        kind: EOF,
+        lexeme: "",
+        line: 0,
+    },
+]

@@ -1,0 +1,141 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: LeftParen,
+        lexeme: "(",
+        line: 0,
+    },
+    Token {
+        kind: RightParen,
+        lexeme: ")",
+        line: 0,
+    },
+    Token {
+        kind: LeftBracket,
+        lexeme: "[",
+        line: 0,
+    },
+    Token {
+        kind: RightBracket,
+        lexeme: "]",
+        line: 0,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "f",
+        line: 0,
+    },
+    Token {
+        kind: LeftParen,
+        lexeme: "(",
+        line: 0,
+    },
+    Token {
+        kind: RightParen,
+        lexeme: ")",
+        line: 0,
+    },
+    Token {
+        kind: PlusPlus,
+        lexeme: "++",
+        line: 0,
+    },
+    Token {
+        kind: MinusMinus,
+        lexeme: "--",
+        line: 0,
+    },
+    Token {
+        kind: Minus,
+        lexeme: "-",
+        line: 0,
+    },
+    Token {
+        kind: Bang,
+        lexeme: "!",
+        line: 0,
+    },
+    Token {
+        kind: Exponent,
+        lexeme: "^",
+        line: 0,
+    },
+    Token {
+        kind: Star,
+        lexeme: "*",
+        line: 0,
+    },
+    Token {
+        kind: Slash,
+        lexeme: "/",
+        line: 0,
+    },
+    Token {
+        kind: Modulo,
+        lexeme: "%",
+        line: 0,
+    },
+    Token {
+        kind: Plus,
+        lexeme: "+",
+        line: 0,
+    },
+    Token {
+        kind: Minus,
+        lexeme: "-",
+        line: 0,
+    },
+    Token {
+        kind: Less,
+        lexeme: "<",
+        line: 0,
+    },
+    Token {
+        kind: LessEqual,
+        lexeme: "<=",
+        line: 0,
+    },
+    Token {
+        kind: Greater,
+        lexeme: ">",
+        line: 0,
+    },
+    Token {
+        kind: GreaterEqual,
+        lexeme: ">=",
+        line: 0,
+    },
+    Token {
+        kind: EqualEqual,
+        lexeme: "==",
+        line: 0,
+    },
+    Token {
+        kind: BangEqual,
+        lexeme: "!=",
+        line: 0,
+    },
+    Token {
+        kind: And,
+        lexeme: "&&",
+        line: 0,
+    },
+    Token {
+        kind: Or,
+        lexeme: "||",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: EOF,
+        lexeme: "",
+        line: 0,
+    },
+]

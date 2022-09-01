@@ -1,0 +1,41 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: Identifier,
+        lexeme: "ch",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Char,
+        lexeme: "char",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: CharLiteral,
+        lexeme: "'\n'",
+        line: 0,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 0,
+    },
+    Token {
+        kind: EOF,
+        lexeme: "",
+        line: 0,
+    },
+]

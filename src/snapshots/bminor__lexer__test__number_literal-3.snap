@@ -1,0 +1,46 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: Identifier,
+        lexeme: "num",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Integer,
+        lexeme: "integer",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: Plus,
+        lexeme: "+",
+        line: 0,
+    },
+    Token {
+        kind: IntegerLiteral,
+        lexeme: "123",
+        line: 0,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 0,
+    },
+    Token {
+        kind: EOF,
+        lexeme: "",
+        line: 0,
+    },
+]

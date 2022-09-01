@@ -1,0 +1,31 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: Identifier,
+        lexeme: "str",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: String,
+        lexeme: "string",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: Error,
+        lexeme: "unterminated string",
+        line: 0,
+    },
+]
