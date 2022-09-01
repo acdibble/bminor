@@ -235,9 +235,11 @@ impl<'a> Lexer<'a> {
 
         loop {
             match self.advance() {
-                Some((_, ch)) if single_line && ch == '\n' => {
+                Some((_, '\n')) => {
                     self.line += 1;
-                    break;
+                    if single_line {
+                        break;
+                    }
                 }
                 Some((_, ch)) if ch == '*' => {
                     if self.consume('/') {
