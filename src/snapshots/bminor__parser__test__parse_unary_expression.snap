@@ -1,0 +1,18 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Unary {
+    operator: Token {
+        kind: Plus,
+        lexeme: "+",
+        line: 0,
+    },
+    value: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "1",
+            line: 0,
+        },
+    },
+}

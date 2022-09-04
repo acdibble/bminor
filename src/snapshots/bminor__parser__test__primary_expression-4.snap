@@ -1,0 +1,11 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Variable {
+    name: Token {
+        kind: Identifier,
+        lexeme: "x",
+        line: 0,
+    },
+}

@@ -1,0 +1,18 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Unary {
+    operator: Token {
+        kind: PlusPlus,
+        lexeme: "++",
+        line: 0,
+    },
+    value: Variable {
+        name: Token {
+            kind: Identifier,
+            lexeme: "x",
+            line: 0,
+        },
+    },
+}

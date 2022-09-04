@@ -1,0 +1,67 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"1 * 2 + 3 / 4 - 5\")"
+---
+Binary {
+    left: Binary {
+        left: Binary {
+            left: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+            },
+            operator: Token {
+                kind: Star,
+                lexeme: "*",
+                line: 0,
+            },
+            right: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "2",
+                    line: 0,
+                },
+            },
+        },
+        operator: Token {
+            kind: Plus,
+            lexeme: "+",
+            line: 0,
+        },
+        right: Binary {
+            left: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "3",
+                    line: 0,
+                },
+            },
+            operator: Token {
+                kind: Slash,
+                lexeme: "/",
+                line: 0,
+            },
+            right: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "4",
+                    line: 0,
+                },
+            },
+        },
+    },
+    operator: Token {
+        kind: Minus,
+        lexeme: "-",
+        line: 0,
+    },
+    right: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "5",
+            line: 0,
+        },
+    },
+}

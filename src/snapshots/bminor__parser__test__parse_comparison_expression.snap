@@ -1,0 +1,27 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"a == b\")"
+---
+Boolean {
+    expression: Binary {
+        left: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "a",
+                line: 0,
+            },
+        },
+        operator: Token {
+            kind: EqualEqual,
+            lexeme: "==",
+            line: 0,
+        },
+        right: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "b",
+                line: 0,
+            },
+        },
+    },
+}

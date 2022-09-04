@@ -1,0 +1,25 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"1 / 3\")"
+---
+Binary {
+    left: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "1",
+            line: 0,
+        },
+    },
+    operator: Token {
+        kind: Slash,
+        lexeme: "/",
+        line: 0,
+    },
+    right: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "3",
+            line: 0,
+        },
+    },
+}

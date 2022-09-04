@@ -1,5 +1,5 @@
 #[derive(PartialEq, Eq, Debug)]
-enum TokenKind {
+pub enum TokenKind {
     Bang,
     Comma,
     Colon,
@@ -35,13 +35,14 @@ enum TokenKind {
     CharLiteral,
     IntegerLiteral,
     StringLiteral,
+    False,
+    True,
 
     // keywords
     Array,
     Boolean,
     Char,
     Else,
-    False,
     For,
     Function,
     If,
@@ -50,7 +51,6 @@ enum TokenKind {
     Print,
     Return,
     String,
-    True,
     Void,
     While,
 
@@ -60,9 +60,9 @@ enum TokenKind {
 
 #[derive(PartialEq, Eq, Debug)]
 pub struct Token<'a> {
-    kind: TokenKind,
-    lexeme: &'a str,
-    line: usize,
+    pub kind: TokenKind,
+    pub lexeme: &'a str,
+    pub line: usize,
 }
 
 pub struct Lexer<'a> {
@@ -380,119 +380,120 @@ impl<'a> Iterator for Lexer<'a> {
 mod test {
     use super::*;
     use insta;
+
+    fn tokenize(string: &str) -> Vec<Token> {
+        Lexer::new(string).into_iter().collect()
+    }
+
     #[test]
     fn test_char_literal() {
-        let tokens: Vec<_> = Lexer::new("ch: char = 'a';").into_iter().collect();
+        let tokens = tokenize("ch: char = 'a';");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("ch: char = '\n';").into_iter().collect();
+        let tokens = tokenize("ch: char = '\n';");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("ch: char = 'aa';").into_iter().collect();
+        let tokens = tokenize("ch: char = 'aa';");
 
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_number_literal() {
-        let tokens: Vec<_> = Lexer::new("num: integer = 123;").into_iter().collect();
+        let tokens = tokenize("num: integer = 123;");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("num: integer = -123;").into_iter().collect();
+        let tokens = tokenize("num: integer = -123;");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("num: integer = +123;").into_iter().collect();
+        let tokens = tokenize("num: integer = +123;");
 
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_boolean_literal() {
-        let tokens: Vec<_> = Lexer::new("bool: boolean = true;").into_iter().collect();
+        let tokens = tokenize("bool: boolean = true;");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("bool: boolean = false;").into_iter().collect();
+        let tokens = tokenize("bool: boolean = false;");
 
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_string_literal() {
-        let tokens: Vec<_> = Lexer::new("str: string = \"true\";").into_iter().collect();
+        let tokens = tokenize("str: string = \"true\";");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("str: string = \"with quote \\\" here\";")
-            .into_iter()
-            .collect();
+        let tokens = tokenize("str: string = \"with quote \\\" here\";");
 
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("str: string = \"unterminated;")
-            .into_iter()
-            .collect();
+        let tokens = tokenize("str: string = \"unterminated;");
 
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_array() {
-        let tokens: Vec<_> = Lexer::new("a: array [5] integer;").into_iter().collect();
+        let tokens = tokenize("a: array [5] integer;");
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> = Lexer::new("a: array [5] integer = {1,2,3,4,5};")
-            .into_iter()
-            .collect();
+        let tokens = tokenize("a: array [5] integer = {1,2,3,4,5};");
         insta::assert_debug_snapshot!(tokens);
 
-        let tokens: Vec<_> =
-            Lexer::new("months: array [3] string = {\"January\",\"February\",\"March\"};")
-                .into_iter()
-                .collect();
+        let tokens = tokenize("months: array [3] string = {\"January\",\"February\",\"March\"};");
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_map() {
-        let tokens: Vec<_> =
-            Lexer::new("m: map string integer = { \"hello\" : 5, \"goodbye\" : 10 };")
-                .into_iter()
-                .collect();
+        let tokens = tokenize("m: map string integer = { \"hello\" : 5, \"goodbye\" : 10 };");
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_comments() {
-        let tokens: Vec<_> = Lexer::new(
+        let tokens = tokenize(
             "/* A C-style comment */
 a=5; // A C++ style comment",
-        )
-        .into_iter()
-        .collect();
+        );
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_keywords() {
-        let tokens: Vec<_> = Lexer::new(
+        let tokens = tokenize(
             "array boolean char else false for function
 if integer map print return string true void while",
-        )
-        .into_iter()
-        .collect();
+        );
         insta::assert_debug_snapshot!(tokens);
     }
 
     #[test]
     fn test_operators() {
-        let tokens: Vec<_> = Lexer::new("() [] f() ++ -- - ! ^ * / % + - < <= > >= == != && || =")
-            .into_iter()
-            .collect();
+        let tokens = tokenize("() [] f() ++ -- - ! ^ * / % + - < <= > >= == != && || =");
+        insta::assert_debug_snapshot!(tokens);
+    }
+
+    #[test]
+    fn test_functions() {
+        let tokens = tokenize(
+            "printarray: function void ( a: array [] integer, size: integer ) = {
+	i: integer;
+	for( i=0;i<size;i++) {
+		print a[i], \"\\n\";
+	}
+}
+",
+        );
         insta::assert_debug_snapshot!(tokens);
     }
 }

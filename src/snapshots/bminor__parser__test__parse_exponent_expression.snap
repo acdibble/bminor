@@ -1,0 +1,34 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Exponent {
+    base: Unary {
+        operator: Token {
+            kind: Minus,
+            lexeme: "-",
+            line: 0,
+        },
+        value: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "1",
+                line: 0,
+            },
+        },
+    },
+    power: Unary {
+        operator: Token {
+            kind: PlusPlus,
+            lexeme: "++",
+            line: 0,
+        },
+        value: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
+        },
+    },
+}

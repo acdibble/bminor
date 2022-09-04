@@ -1,0 +1,20 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Unary {
+    operator: Token {
+        kind: Bang,
+        lexeme: "!",
+        line: 0,
+    },
+    value: Boolean {
+        expression: Literal {
+            value: Token {
+                kind: True,
+                lexeme: "true",
+                line: 0,
+            },
+        },
+    },
+}

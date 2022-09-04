@@ -1,0 +1,25 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"1 * 2\")"
+---
+Binary {
+    left: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "1",
+            line: 0,
+        },
+    },
+    operator: Token {
+        kind: Star,
+        lexeme: "*",
+        line: 0,
+    },
+    right: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "2",
+            line: 0,
+        },
+    },
+}

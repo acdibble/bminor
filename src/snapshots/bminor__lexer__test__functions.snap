@@ -1,0 +1,241 @@
+---
+source: src/lexer.rs
+expression: tokens
+---
+[
+    Token {
+        kind: Identifier,
+        lexeme: "printarray",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Function,
+        lexeme: "function",
+        line: 0,
+    },
+    Token {
+        kind: Void,
+        lexeme: "void",
+        line: 0,
+    },
+    Token {
+        kind: LeftParen,
+        lexeme: "(",
+        line: 0,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "a",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Array,
+        lexeme: "array",
+        line: 0,
+    },
+    Token {
+        kind: LeftBracket,
+        lexeme: "[",
+        line: 0,
+    },
+    Token {
+        kind: RightBracket,
+        lexeme: "]",
+        line: 0,
+    },
+    Token {
+        kind: Integer,
+        lexeme: "integer",
+        line: 0,
+    },
+    Token {
+        kind: Comma,
+        lexeme: ",",
+        line: 0,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "size",
+        line: 0,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 0,
+    },
+    Token {
+        kind: Integer,
+        lexeme: "integer",
+        line: 0,
+    },
+    Token {
+        kind: RightParen,
+        lexeme: ")",
+        line: 0,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 0,
+    },
+    Token {
+        kind: LeftBrace,
+        lexeme: "{",
+        line: 0,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "i",
+        line: 1,
+    },
+    Token {
+        kind: Colon,
+        lexeme: ":",
+        line: 1,
+    },
+    Token {
+        kind: Integer,
+        lexeme: "integer",
+        line: 1,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 1,
+    },
+    Token {
+        kind: For,
+        lexeme: "for",
+        line: 2,
+    },
+    Token {
+        kind: LeftParen,
+        lexeme: "(",
+        line: 2,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "i",
+        line: 2,
+    },
+    Token {
+        kind: Equal,
+        lexeme: "=",
+        line: 2,
+    },
+    Token {
+        kind: IntegerLiteral,
+        lexeme: "0",
+        line: 2,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 2,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "i",
+        line: 2,
+    },
+    Token {
+        kind: Less,
+        lexeme: "<",
+        line: 2,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "size",
+        line: 2,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 2,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "i",
+        line: 2,
+    },
+    Token {
+        kind: PlusPlus,
+        lexeme: "++",
+        line: 2,
+    },
+    Token {
+        kind: RightParen,
+        lexeme: ")",
+        line: 2,
+    },
+    Token {
+        kind: LeftBrace,
+        lexeme: "{",
+        line: 2,
+    },
+    Token {
+        kind: Print,
+        lexeme: "print",
+        line: 3,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "a",
+        line: 3,
+    },
+    Token {
+        kind: LeftBracket,
+        lexeme: "[",
+        line: 3,
+    },
+    Token {
+        kind: Identifier,
+        lexeme: "i",
+        line: 3,
+    },
+    Token {
+        kind: RightBracket,
+        lexeme: "]",
+        line: 3,
+    },
+    Token {
+        kind: Comma,
+        lexeme: ",",
+        line: 3,
+    },
+    Token {
+        kind: StringLiteral,
+        lexeme: "\"\\n\"",
+        line: 3,
+    },
+    Token {
+        kind: Semicolon,
+        lexeme: ";",
+        line: 3,
+    },
+    Token {
+        kind: RightBrace,
+        lexeme: "}",
+        line: 4,
+    },
+    Token {
+        kind: RightBrace,
+        lexeme: "}",
+        line: 5,
+    },
+    Token {
+        kind: EOF,
+        lexeme: "",
+        line: 6,
+    },
+]

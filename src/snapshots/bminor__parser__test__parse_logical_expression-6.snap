@@ -1,0 +1,43 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"a || b && c\")"
+---
+Boolean {
+    expression: Logical {
+        left: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "a",
+                line: 0,
+            },
+        },
+        operator: Token {
+            kind: Or,
+            lexeme: "||",
+            line: 0,
+        },
+        right: Boolean {
+            expression: Logical {
+                left: Variable {
+                    name: Token {
+                        kind: Identifier,
+                        lexeme: "b",
+                        line: 0,
+                    },
+                },
+                operator: Token {
+                    kind: And,
+                    lexeme: "&&",
+                    line: 0,
+                },
+                right: Variable {
+                    name: Token {
+                        kind: Identifier,
+                        lexeme: "c",
+                        line: 0,
+                    },
+                },
+            },
+        },
+    },
+}

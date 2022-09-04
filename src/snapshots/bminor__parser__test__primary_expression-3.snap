@@ -1,0 +1,11 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Literal {
+    value: Token {
+        kind: StringLiteral,
+        lexeme: "\"string literal\"",
+        line: 0,
+    },
+}

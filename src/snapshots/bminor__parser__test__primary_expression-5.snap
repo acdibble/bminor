@@ -1,0 +1,13 @@
+---
+source: src/parser.rs
+expression: expression
+---
+Grouping {
+    expression: Literal {
+        value: Token {
+            kind: IntegerLiteral,
+            lexeme: "2",
+            line: 0,
+        },
+    },
+}
