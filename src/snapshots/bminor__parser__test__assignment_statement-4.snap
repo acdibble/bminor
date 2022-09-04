@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"bool: boolean;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "bool",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: Boolean,
+                lexeme: "boolean",
+                line: 0,
+            },
+            initializer: None,
+        },
+    },
+)

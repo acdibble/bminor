@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"int: integer;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "int",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            initializer: None,
+        },
+    },
+)

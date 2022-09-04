@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"arr: array;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect left bracket",
+    ),
+)

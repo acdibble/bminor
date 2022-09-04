@@ -1,0 +1,52 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"arr: array [1] integer = {1,\n            2,\n            3\n        };\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "arr",
+            line: 0,
+        },
+        variable_type: Array {
+            kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            size: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+            },
+            initializer: Some(
+                [
+                    Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "1",
+                            line: 0,
+                        },
+                    },
+                    Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 1,
+                        },
+                    },
+                    Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "3",
+                            line: 2,
+                        },
+                    },
+                ],
+            ),
+        },
+    },
+)

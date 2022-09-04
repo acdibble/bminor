@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"m: map string;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect map value type",
+    ),
+)

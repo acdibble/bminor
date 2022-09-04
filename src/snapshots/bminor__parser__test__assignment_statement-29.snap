@@ -1,0 +1,61 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"m: map string integer = {\n                \\\"key\\\": 0,\n                \\\"key2\\\":1\n            };\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "m",
+            line: 0,
+        },
+        variable_type: Map {
+            key_kind: Token {
+                kind: String,
+                lexeme: "string",
+                line: 0,
+            },
+            value_kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            initializer: Some(
+                [
+                    (
+                        Literal {
+                            value: Token {
+                                kind: StringLiteral,
+                                lexeme: "\"key\"",
+                                line: 1,
+                            },
+                        },
+                        Literal {
+                            value: Token {
+                                kind: IntegerLiteral,
+                                lexeme: "0",
+                                line: 1,
+                            },
+                        },
+                    ),
+                    (
+                        Literal {
+                            value: Token {
+                                kind: StringLiteral,
+                                lexeme: "\"key2\"",
+                                line: 2,
+                            },
+                        },
+                        Literal {
+                            value: Token {
+                                kind: IntegerLiteral,
+                                lexeme: "1",
+                                line: 2,
+                            },
+                        },
+                    ),
+                ],
+            ),
+        },
+    },
+)

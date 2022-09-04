@@ -1,6 +1,6 @@
 ---
 source: src/parser.rs
-expression: expression
+expression: "parse_expression(\"x\")"
 ---
 Variable {
     name: Token {

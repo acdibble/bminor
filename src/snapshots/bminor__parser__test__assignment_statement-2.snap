@@ -1,0 +1,29 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"int: integer = 2;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "int",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            initializer: Some(
+                Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "2",
+                        line: 0,
+                    },
+                },
+            ),
+        },
+    },
+)

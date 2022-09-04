@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"m: map string integer = {\\\"key\\\":0;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect '}' after map values",
+    ),
+)

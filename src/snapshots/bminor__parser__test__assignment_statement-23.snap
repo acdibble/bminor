@@ -1,0 +1,26 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"m: map string integer;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "m",
+            line: 0,
+        },
+        variable_type: Map {
+            key_kind: Token {
+                kind: String,
+                lexeme: "string",
+                line: 0,
+            },
+            value_kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            initializer: None,
+        },
+    },
+)

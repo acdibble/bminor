@@ -1,11 +1,11 @@
 ---
 source: src/parser.rs
-expression: expression
+expression: "parse_expression(\"+1\")"
 ---
 Unary {
     operator: Token {
-        kind: Minus,
-        lexeme: "-",
+        kind: Plus,
+        lexeme: "+",
         line: 0,
     },
     value: Literal {

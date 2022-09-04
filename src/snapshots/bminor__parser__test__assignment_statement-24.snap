@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"m: map string integer =;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect '{' before map values",
+    ),
+)

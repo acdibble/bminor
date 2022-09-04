@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"arr: array [1];\")"
+---
+Err(
+    UnexpectedToken(
+        "expect array type",
+    ),
+)

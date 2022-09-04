@@ -1,0 +1,28 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"arr: array [1] char;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "arr",
+            line: 0,
+        },
+        variable_type: Array {
+            kind: Token {
+                kind: Char,
+                lexeme: "char",
+                line: 0,
+            },
+            size: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+            },
+            initializer: None,
+        },
+    },
+)

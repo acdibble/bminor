@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"str: string;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "str",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: String,
+                lexeme: "string",
+                line: 0,
+            },
+            initializer: None,
+        },
+    },
+)

@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"ch: char;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "ch",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: Char,
+                lexeme: "char",
+                line: 0,
+            },
+            initializer: None,
+        },
+    },
+)

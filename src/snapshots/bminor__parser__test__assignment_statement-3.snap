@@ -1,0 +1,43 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"int: integer = 2 * 2;\")"
+---
+Ok(
+    Declaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "int",
+            line: 0,
+        },
+        variable_type: Atomic {
+            kind: Token {
+                kind: Integer,
+                lexeme: "integer",
+                line: 0,
+            },
+            initializer: Some(
+                Binary {
+                    left: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 0,
+                        },
+                    },
+                    operator: Token {
+                        kind: Star,
+                        lexeme: "*",
+                        line: 0,
+                    },
+                    right: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 0,
+                        },
+                    },
+                },
+            ),
+        },
+    },
+)
