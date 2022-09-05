@@ -537,7 +537,7 @@ mod test {
     }
 
     #[test]
-    fn test_assignment_statement() {
+    fn test_declaration_statement() {
         insta::assert_debug_snapshot!(parse_statement("int: integer;"));
         insta::assert_debug_snapshot!(parse_statement("int: integer = 2;"));
         insta::assert_debug_snapshot!(parse_statement("int: integer = 2 * 2;"));
