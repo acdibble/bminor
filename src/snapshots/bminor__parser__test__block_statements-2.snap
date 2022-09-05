@@ -1,0 +1,48 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"{\n    x: integer;\n    y: string = \\\"hello world\\\";\n}\")"
+---
+Ok(
+    Block {
+        statements: [
+            Declaration {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "x",
+                    line: 1,
+                },
+                variable_type: Atomic {
+                    kind: Token {
+                        kind: Integer,
+                        lexeme: "integer",
+                        line: 1,
+                    },
+                    initializer: None,
+                },
+            },
+            Declaration {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "y",
+                    line: 2,
+                },
+                variable_type: Atomic {
+                    kind: Token {
+                        kind: String,
+                        lexeme: "string",
+                        line: 2,
+                    },
+                    initializer: Some(
+                        Literal {
+                            value: Token {
+                                kind: StringLiteral,
+                                lexeme: "\"hello world\"",
+                                line: 2,
+                            },
+                        },
+                    ),
+                },
+            },
+        ],
+    },
+)

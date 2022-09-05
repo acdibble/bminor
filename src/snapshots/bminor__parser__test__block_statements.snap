@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"{}\")"
+---
+Ok(
+    Block {
+        statements: [],
+    },
+)

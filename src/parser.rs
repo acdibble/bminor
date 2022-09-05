@@ -59,6 +59,9 @@ pub enum VariableType<'a> {
 
 #[derive(Debug)]
 pub enum Statement<'a> {
+    Block {
+        statements: Vec<Statement<'a>>,
+    },
     Declaration {
         name: Token<'a>,
         variable_type: VariableType<'a>,
@@ -131,15 +134,26 @@ impl<'a> Parser<'a> {
         let next = self.advance()?;
 
         let stmt = match &next.kind {
+            TokenKind::LeftBrace => self.block_statement(),
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
-                self.declaration_statement(next)
+                let result = self.declaration_statement(next)?;
+                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+                Ok(result)
             }
             _ => todo!(),
         }?;
 
-        self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
-
         Ok(stmt)
+    }
+
+    fn block_statement(&mut self) -> ParseResult<Statement<'a>> {
+        let mut statements = Vec::new();
+
+        while self.consume(&[TokenKind::RightBrace]).is_none() {
+            statements.push(self.statement()?);
+        }
+
+        Ok(Statement::Block { statements })
     }
 
     fn declaration_statement(&mut self, name: Token<'a>) -> ParseResult<Statement<'a>> {
@@ -579,6 +593,17 @@ mod test {
                 \"key\": 0,
                 \"key2\":1
             };"
+        ));
+    }
+
+    #[test]
+    fn test_block_statements() {
+        insta::assert_debug_snapshot!(parse_statement("{}"));
+        insta::assert_debug_snapshot!(parse_statement(
+            "{
+    x: integer;
+    y: string = \"hello world\";
+}"
         ));
     }
 }
