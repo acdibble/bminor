@@ -93,6 +93,9 @@ pub enum Statement<'a> {
     Block {
         statements: Vec<Statement<'a>>,
     },
+    Expression {
+        expression: Expression<'a>,
+    },
     FunctionDeclaration {
         name: Token<'a>,
         return_kind: Token<'a>,
@@ -132,6 +135,7 @@ type ParseResult<T> = Result<T, ParseError>;
 pub struct Parser<'a> {
     tokens: Peekable<Lexer<'a>>,
     done: bool,
+    outstanding: Option<Token<'a>>,
 }
 
 impl<'a> Parser<'a> {
@@ -141,22 +145,34 @@ impl<'a> Parser<'a> {
         Self {
             tokens,
             done: false,
+            outstanding: None,
         }
     }
 
     fn advance(&mut self) -> ParseResult<Token<'a>> {
-        self.tokens.next().ok_or(ParseError::UnexpectedParserError)
+        self.outstanding
+            .take()
+            .or_else(|| self.tokens.next())
+            .ok_or(ParseError::UnexpectedParserError)
+    }
+
+    fn peek(&mut self) -> Option<&Token<'a>> {
+        self.outstanding.as_ref().or_else(|| self.tokens.peek())
     }
 
     fn matches(&mut self, expected_kind: TokenKind) -> bool {
-        match self.tokens.peek() {
+        match self.peek() {
             Some(token) => token.kind == expected_kind,
             _ => false,
         }
     }
 
     fn consume(&mut self, expected_kinds: &[TokenKind]) -> Option<Token<'a>> {
-        self.tokens.next_if(|t| expected_kinds.contains(&t.kind))
+        match self.outstanding.as_ref() {
+            Some(token) if expected_kinds.contains(&token.kind) => self.outstanding.take(),
+            Some(_) => None,
+            None => self.tokens.next_if(|t| expected_kinds.contains(&t.kind)),
+        }
     }
 
     fn expect(
@@ -167,7 +183,7 @@ impl<'a> Parser<'a> {
         if let Some(token) = self.consume(expected_kinds) {
             Ok(token)
         } else {
-            println!("{:?}", self.tokens.peek());
+            println!("{:?}", self.peek());
             Err(ParseError::UnexpectedToken(message.to_owned()))
         }
     }
@@ -187,7 +203,10 @@ impl<'a> Parser<'a> {
             TokenKind::If => self.if_statement(),
             TokenKind::Print => self.print_statement(),
             TokenKind::Return => self.return_statement(),
-            _ => self.error_message("unable to parse statement"),
+            _ => {
+                self.outstanding = Some(next);
+                self.expression_statement()
+            }
         }?;
 
         Ok(stmt)
@@ -404,6 +423,13 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn expression_statement(&mut self) -> ParseResult<Statement<'a>> {
+        let expression = self.expression()?;
+        println!("{expression:?}");
+        self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+        Ok(Statement::Expression { expression })
+    }
+
     fn if_statement(&mut self) -> ParseResult<Statement<'a>> {
         self.expect(&[TokenKind::LeftParen], "expect '(' after if")?;
 
@@ -585,8 +611,8 @@ impl<'a> Parser<'a> {
     fn call(&mut self) -> ParseResult<Expression<'a>> {
         let mut expr = self.primary()?;
 
-        if let Expression::Variable { name } = &expr {
-            if self.consume(&[TokenKind::LeftParen]).is_some() {
+        if let Expression::Variable { name } = expr {
+            expr = if self.consume(&[TokenKind::LeftParen]).is_some() {
                 let mut args = Vec::new();
 
                 if !self.matches(TokenKind::RightParen) {
@@ -600,7 +626,9 @@ impl<'a> Parser<'a> {
 
                 self.expect(&[TokenKind::RightParen], "expect ')' after arg list")?;
 
-                expr = Expression::Call { name: *name, args }
+                Expression::Call { name, args }
+            } else {
+                Expression::Variable { name }
             }
         }
 
@@ -866,5 +894,20 @@ mod test {
         insta::assert_debug_snapshot!(parse_statement(
             "if (true) if (false) return 2; else return 0;"
         ));
+    }
+
+    #[test]
+    fn test_expression_statement() {
+        insta::assert_debug_snapshot!(parse_statement("true;"));
+        insta::assert_debug_snapshot!(parse_statement("false;"));
+        insta::assert_debug_snapshot!(parse_statement("1;"));
+        insta::assert_debug_snapshot!(parse_statement("'c';"));
+        insta::assert_debug_snapshot!(parse_statement("\"string\";"));
+        insta::assert_debug_snapshot!(parse_statement("1 + 1;"));
+        insta::assert_debug_snapshot!(parse_statement("true || false;"));
+        insta::assert_debug_snapshot!(parse_statement("fn();"));
+        insta::assert_debug_snapshot!(parse_statement("x = fn();"));
+        insta::assert_debug_snapshot!(parse_statement("1 * 1;"));
+        insta::assert_debug_snapshot!(parse_statement("x = 1 + 1;"));
     }
 }

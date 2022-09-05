@@ -1,0 +1,15 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"\\\"string\\\";\")"
+---
+Ok(
+    Expression {
+        expression: Literal {
+            value: Token {
+                kind: StringLiteral,
+                lexeme: "\"string\"",
+                line: 0,
+            },
+        },
+    },
+)

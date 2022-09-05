@@ -1,0 +1,36 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"x = 1 + 1;\")"
+---
+Ok(
+    Expression {
+        expression: Assignment {
+            target: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
+            value: Binary {
+                left: Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "1",
+                        line: 0,
+                    },
+                },
+                operator: Token {
+                    kind: Plus,
+                    lexeme: "+",
+                    line: 0,
+                },
+                right: Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "1",
+                        line: 0,
+                    },
+                },
+            },
+        },
+    },
+)

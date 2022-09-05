@@ -1,0 +1,16 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn();\")"
+---
+Ok(
+    Expression {
+        expression: Call {
+            name: Token {
+                kind: Identifier,
+                lexeme: "fn",
+                line: 0,
+            },
+            args: [],
+        },
+    },
+)

@@ -1,4 +1,4 @@
-#[derive(PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum TokenKind {
     Bang,
     Comma,
@@ -58,7 +58,7 @@ pub enum TokenKind {
     EOF,
 }
 
-#[derive(PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct Token<'a> {
     pub kind: TokenKind,
     pub lexeme: &'a str,

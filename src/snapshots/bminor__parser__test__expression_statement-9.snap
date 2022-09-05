@@ -1,0 +1,23 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"x = fn();\")"
+---
+Ok(
+    Expression {
+        expression: Assignment {
+            target: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
+            value: Call {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "fn",
+                    line: 0,
+                },
+                args: [],
+            },
+        },
+    },
+)

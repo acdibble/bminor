@@ -1,0 +1,17 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"false;\")"
+---
+Ok(
+    Expression {
+        expression: Boolean {
+            expression: Literal {
+                value: Token {
+                    kind: False,
+                    lexeme: "false",
+                    line: 0,
+                },
+            },
+        },
+    },
+)
