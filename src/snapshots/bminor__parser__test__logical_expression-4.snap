@@ -2,42 +2,44 @@
 source: src/parser.rs
 expression: "parse_expression(\"a || b || c\")"
 ---
-Boolean {
-    expression: Logical {
-        left: Boolean {
-            expression: Logical {
-                left: Variable {
-                    name: Token {
-                        kind: Identifier,
-                        lexeme: "a",
+Ok(
+    Boolean {
+        expression: Logical {
+            left: Boolean {
+                expression: Logical {
+                    left: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "a",
+                            line: 0,
+                        },
+                    },
+                    operator: Token {
+                        kind: Or,
+                        lexeme: "||",
                         line: 0,
                     },
-                },
-                operator: Token {
-                    kind: Or,
-                    lexeme: "||",
-                    line: 0,
-                },
-                right: Variable {
-                    name: Token {
-                        kind: Identifier,
-                        lexeme: "b",
-                        line: 0,
+                    right: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "b",
+                            line: 0,
+                        },
                     },
                 },
             },
-        },
-        operator: Token {
-            kind: Or,
-            lexeme: "||",
-            line: 0,
-        },
-        right: Variable {
-            name: Token {
-                kind: Identifier,
-                lexeme: "c",
+            operator: Token {
+                kind: Or,
+                lexeme: "||",
                 line: 0,
+            },
+            right: Variable {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "c",
+                    line: 0,
+                },
             },
         },
     },
-}
+)

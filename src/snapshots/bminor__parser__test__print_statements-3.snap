@@ -1,0 +1,45 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"print 1, 2 + 2, \\\"string\\\";\")"
+---
+Ok(
+    Print {
+        expressions: [
+            Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+            },
+            Binary {
+                left: Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "2",
+                        line: 0,
+                    },
+                },
+                operator: Token {
+                    kind: Plus,
+                    lexeme: "+",
+                    line: 0,
+                },
+                right: Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "2",
+                        line: 0,
+                    },
+                },
+            },
+            Literal {
+                value: Token {
+                    kind: StringLiteral,
+                    lexeme: "\"string\"",
+                    line: 0,
+                },
+            },
+        ],
+    },
+)

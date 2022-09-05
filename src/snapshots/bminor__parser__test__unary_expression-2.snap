@@ -2,17 +2,19 @@
 source: src/parser.rs
 expression: "parse_expression(\"-1\")"
 ---
-Unary {
-    operator: Token {
-        kind: Minus,
-        lexeme: "-",
-        line: 0,
-    },
-    value: Literal {
-        value: Token {
-            kind: IntegerLiteral,
-            lexeme: "1",
+Ok(
+    Unary {
+        operator: Token {
+            kind: Minus,
+            lexeme: "-",
             line: 0,
         },
+        value: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "1",
+                line: 0,
+            },
+        },
     },
-}
+)

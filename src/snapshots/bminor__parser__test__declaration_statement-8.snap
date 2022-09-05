@@ -4,6 +4,6 @@ expression: "parse_statement(\"arr: array [;\")"
 ---
 Err(
     UnexpectedToken(
-        "Token { kind: Semicolon, lexeme: \";\", line: 0 }",
+        "expect expression",
     ),
 )

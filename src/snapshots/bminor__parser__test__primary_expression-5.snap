@@ -2,12 +2,14 @@
 source: src/parser.rs
 expression: "parse_expression(\"(2)\")"
 ---
-Grouping {
-    expression: Literal {
-        value: Token {
-            kind: IntegerLiteral,
-            lexeme: "2",
-            line: 0,
+Ok(
+    Grouping {
+        expression: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "2",
+                line: 0,
+            },
         },
     },
-}
+)

@@ -2,24 +2,26 @@
 source: src/parser.rs
 expression: "parse_expression(\"1 % 4\")"
 ---
-Binary {
-    left: Literal {
-        value: Token {
-            kind: IntegerLiteral,
-            lexeme: "1",
+Ok(
+    Binary {
+        left: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "1",
+                line: 0,
+            },
+        },
+        operator: Token {
+            kind: Modulo,
+            lexeme: "%",
             line: 0,
         },
-    },
-    operator: Token {
-        kind: Modulo,
-        lexeme: "%",
-        line: 0,
-    },
-    right: Literal {
-        value: Token {
-            kind: IntegerLiteral,
-            lexeme: "4",
-            line: 0,
+        right: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "4",
+                line: 0,
+            },
         },
     },
-}
+)

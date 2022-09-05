@@ -2,10 +2,12 @@
 source: src/parser.rs
 expression: "parse_expression(\"\\\"string literal\\\"\")"
 ---
-Literal {
-    value: Token {
-        kind: StringLiteral,
-        lexeme: "\"string literal\"",
-        line: 0,
+Ok(
+    Literal {
+        value: Token {
+            kind: StringLiteral,
+            lexeme: "\"string literal\"",
+            line: 0,
+        },
     },
-}
+)

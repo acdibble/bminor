@@ -1,6 +1,6 @@
 ---
 source: src/parser.rs
-expression: "parse_statement(\"m: map string integer = {\\\"key\\\":;\")"
+expression: "parse_statement(\"print;\")"
 ---
 Err(
     UnexpectedToken(

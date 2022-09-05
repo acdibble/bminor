@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"x(a\")"
+---
+Err(
+    UnexpectedToken(
+        "expect ')' after param list",
+    ),
+)

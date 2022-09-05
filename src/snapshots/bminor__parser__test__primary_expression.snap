@@ -2,10 +2,12 @@
 source: src/parser.rs
 expression: "parse_expression(\"'a'\")"
 ---
-Literal {
-    value: Token {
-        kind: CharLiteral,
-        lexeme: "'a'",
-        line: 0,
+Ok(
+    Literal {
+        value: Token {
+            kind: CharLiteral,
+            lexeme: "'a'",
+            line: 0,
+        },
     },
-}
+)

@@ -2,17 +2,19 @@
 source: src/parser.rs
 expression: "parse_expression(\"x--\")"
 ---
-Unary {
-    operator: Token {
-        kind: MinusMinus,
-        lexeme: "--",
-        line: 0,
-    },
-    value: Variable {
-        name: Token {
-            kind: Identifier,
-            lexeme: "x",
+Ok(
+    Unary {
+        operator: Token {
+            kind: MinusMinus,
+            lexeme: "--",
             line: 0,
         },
+        value: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
+        },
     },
-}
+)

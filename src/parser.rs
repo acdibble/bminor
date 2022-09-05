@@ -37,6 +37,10 @@ pub enum Expression<'a> {
         target: Token<'a>,
         value: Box<Expression<'a>>,
     },
+    Call {
+        name: Token<'a>,
+        params: Vec<Expression<'a>>,
+    },
 }
 
 #[derive(Debug)]
@@ -65,6 +69,9 @@ pub enum Statement<'a> {
     Declaration {
         name: Token<'a>,
         variable_type: VariableType<'a>,
+    },
+    Print {
+        expressions: Vec<Expression<'a>>,
     },
 }
 
@@ -119,13 +126,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn error<T>(&mut self) -> ParseResult<T> {
-        match self.tokens.peek() {
-            Some(token) => Err(ParseError::UnexpectedToken(format!("{:?}", token))),
-            None => Err(ParseError::UnexpectedParserError),
-        }
-    }
-
     fn error_message<T>(&mut self, message: &str) -> ParseResult<T> {
         Err(ParseError::UnexpectedToken(message.to_owned()))
     }
@@ -134,11 +134,16 @@ impl<'a> Parser<'a> {
         let next = self.advance()?;
 
         let stmt = match &next.kind {
+            TokenKind::Print => {
+                let print = self.print_statement()?;
+                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+                Ok(print)
+            }
             TokenKind::LeftBrace => self.block_statement(),
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
-                let result = self.declaration_statement(next)?;
+                let declaration = self.declaration_statement(next)?;
                 self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
-                Ok(result)
+                Ok(declaration)
             }
             _ => todo!(),
         }?;
@@ -285,6 +290,20 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn print_statement(&mut self) -> ParseResult<Statement<'a>> {
+        let mut expressions = Vec::new();
+
+        loop {
+            expressions.push(self.expression()?);
+
+            if self.consume(&[TokenKind::Comma]).is_none() {
+                break;
+            }
+        }
+
+        Ok(Statement::Print { expressions })
+    }
+
     fn expression(&mut self) -> ParseResult<Expression<'a>> {
         self.assignment()
     }
@@ -418,7 +437,31 @@ impl<'a> Parser<'a> {
     }
 
     fn call(&mut self) -> ParseResult<Expression<'a>> {
-        self.primary()
+        let mut expr = self.primary()?;
+
+        if let Expression::Variable { name } = &expr {
+            if self.consume(&[TokenKind::LeftParen]).is_some() {
+                let mut params = Vec::new();
+
+                if self.consume(&[TokenKind::RightParen]).is_none() {
+                    loop {
+                        params.push(self.expression()?);
+                        if self.consume(&[TokenKind::Comma]).is_none() {
+                            break;
+                        }
+                    }
+
+                    self.expect(&[TokenKind::RightParen], "expect ')' after param list")?;
+                }
+
+                expr = Expression::Call {
+                    name: *name,
+                    params,
+                }
+            }
+        }
+
+        Ok(expr)
     }
 
     fn primary(&mut self) -> ParseResult<Expression<'a>> {
@@ -446,7 +489,7 @@ impl<'a> Parser<'a> {
                 expression: Box::from(expression),
             })
         } else {
-            self.error()
+            self.error_message("expect expression")
         }
     }
 
@@ -484,8 +527,8 @@ mod test {
     use super::*;
     use insta;
 
-    fn parse_expression(string: &str) -> Expression {
-        Parser::new(string).expression().unwrap()
+    fn parse_expression(string: &str) -> ParseResult<Expression> {
+        Parser::new(string).expression()
     }
 
     fn parse_statement(string: &str) -> ParseResult<Statement> {
@@ -551,6 +594,18 @@ mod test {
     }
 
     #[test]
+    fn test_call_expression() {
+        insta::assert_debug_snapshot!(parse_expression("x()"));
+        insta::assert_debug_snapshot!(parse_expression("x(a)"));
+        insta::assert_debug_snapshot!(parse_expression("x(a, 1))"));
+        insta::assert_debug_snapshot!(parse_expression("x(a, 1, y = 2, z())"));
+        insta::assert_debug_snapshot!(parse_expression("x(a, 1, y = 2, z(g()))"));
+        insta::assert_debug_snapshot!(parse_expression("x(a,"));
+        insta::assert_debug_snapshot!(parse_expression("x(a"));
+        insta::assert_debug_snapshot!(parse_expression("x("));
+    }
+
+    #[test]
     fn test_declaration_statement() {
         insta::assert_debug_snapshot!(parse_statement("int: integer;"));
         insta::assert_debug_snapshot!(parse_statement("int: integer = 2;"));
@@ -605,5 +660,14 @@ mod test {
     y: string = \"hello world\";
 }"
         ));
+    }
+
+    #[test]
+    fn test_print_statements() {
+        insta::assert_debug_snapshot!(parse_statement("print;"));
+        insta::assert_debug_snapshot!(parse_statement("print 1;"));
+        insta::assert_debug_snapshot!(parse_statement("print 1, 2 + 2, \"string\";"));
+        insta::assert_debug_snapshot!(parse_statement("print 1"));
+        insta::assert_debug_snapshot!(parse_statement("print fun();"));
     }
 }

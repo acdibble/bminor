@@ -2,19 +2,21 @@
 source: src/parser.rs
 expression: "parse_expression(\"!true\")"
 ---
-Unary {
-    operator: Token {
-        kind: Bang,
-        lexeme: "!",
-        line: 0,
-    },
-    value: Boolean {
-        expression: Literal {
-            value: Token {
-                kind: True,
-                lexeme: "true",
-                line: 0,
+Ok(
+    Unary {
+        operator: Token {
+            kind: Bang,
+            lexeme: "!",
+            line: 0,
+        },
+        value: Boolean {
+            expression: Literal {
+                value: Token {
+                    kind: True,
+                    lexeme: "true",
+                    line: 0,
+                },
             },
         },
     },
-}
+)

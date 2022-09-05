@@ -1,0 +1,22 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"x(a)\")"
+---
+Ok(
+    Call {
+        name: Token {
+            kind: Identifier,
+            lexeme: "x",
+            line: 0,
+        },
+        params: [
+            Variable {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "a",
+                    line: 0,
+                },
+            },
+        ],
+    },
+)

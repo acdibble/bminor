@@ -1,0 +1,17 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"print 1;\")"
+---
+Ok(
+    Print {
+        expressions: [
+            Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+            },
+        ],
+    },
+)

@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"print 1\")"
+---
+Err(
+    UnexpectedToken(
+        "expect ';' after statement",
+    ),
+)
