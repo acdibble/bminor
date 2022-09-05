@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect return type after 'function'",
+    ),
+)

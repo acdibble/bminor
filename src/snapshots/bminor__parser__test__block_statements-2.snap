@@ -5,7 +5,7 @@ expression: "parse_statement(\"{\n    x: integer;\n    y: string = \\\"hello wor
 Ok(
     Block {
         statements: [
-            Declaration {
+            VariableDeclaration {
                 name: Token {
                     kind: Identifier,
                     lexeme: "x",
@@ -20,7 +20,7 @@ Ok(
                     initializer: None,
                 },
             },
-            Declaration {
+            VariableDeclaration {
                 name: Token {
                     kind: Identifier,
                     lexeme: "y",

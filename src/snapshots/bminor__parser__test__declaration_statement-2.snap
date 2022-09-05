@@ -3,7 +3,7 @@ source: src/parser.rs
 expression: "parse_statement(\"int: integer = 2;\")"
 ---
 Ok(
-    Declaration {
+    VariableDeclaration {
         name: Token {
             kind: Identifier,
             lexeme: "int",

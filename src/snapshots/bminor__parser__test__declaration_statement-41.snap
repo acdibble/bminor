@@ -1,0 +1,112 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function boolean (a: integer, b: string, c: char, d: array [] integer, e: boolean, f: map string string) = {}\")"
+---
+Ok(
+    FunctionDeclaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "fn",
+            line: 0,
+        },
+        return_kind: Token {
+            kind: Boolean,
+            lexeme: "boolean",
+            line: 0,
+        },
+        params: [
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "a",
+                    line: 0,
+                },
+                kind: Atomic {
+                    kind: Token {
+                        kind: Integer,
+                        lexeme: "integer",
+                        line: 0,
+                    },
+                },
+            },
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "b",
+                    line: 0,
+                },
+                kind: Atomic {
+                    kind: Token {
+                        kind: String,
+                        lexeme: "string",
+                        line: 0,
+                    },
+                },
+            },
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "c",
+                    line: 0,
+                },
+                kind: Atomic {
+                    kind: Token {
+                        kind: Char,
+                        lexeme: "char",
+                        line: 0,
+                    },
+                },
+            },
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "d",
+                    line: 0,
+                },
+                kind: Array {
+                    kind: Token {
+                        kind: Integer,
+                        lexeme: "integer",
+                        line: 0,
+                    },
+                },
+            },
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "e",
+                    line: 0,
+                },
+                kind: Atomic {
+                    kind: Token {
+                        kind: Boolean,
+                        lexeme: "boolean",
+                        line: 0,
+                    },
+                },
+            },
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "f",
+                    line: 0,
+                },
+                kind: Map {
+                    key_kind: Token {
+                        kind: String,
+                        lexeme: "string",
+                        line: 0,
+                    },
+                    value_kind: Token {
+                        kind: String,
+                        lexeme: "string",
+                        line: 0,
+                    },
+                },
+            },
+        ],
+        body: Block {
+            statements: [],
+        },
+    },
+)

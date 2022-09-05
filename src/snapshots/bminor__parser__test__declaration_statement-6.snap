@@ -3,7 +3,7 @@ source: src/parser.rs
 expression: "parse_statement(\"str: string;\")"
 ---
 Ok(
-    Declaration {
+    VariableDeclaration {
         name: Token {
             kind: Identifier,
             lexeme: "str",

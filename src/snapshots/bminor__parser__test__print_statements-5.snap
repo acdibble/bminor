@@ -11,7 +11,7 @@ Ok(
                     lexeme: "fun",
                     line: 0,
                 },
-                params: [],
+                args: [],
             },
         ],
     },

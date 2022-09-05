@@ -4,6 +4,6 @@ expression: "parse_expression(\"x(a\")"
 ---
 Err(
     UnexpectedToken(
-        "expect ')' after param list",
+        "expect ')' after arg list",
     ),
 )

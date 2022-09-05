@@ -3,7 +3,7 @@ source: src/parser.rs
 expression: "parse_statement(\"bool: boolean;\")"
 ---
 Ok(
-    Declaration {
+    VariableDeclaration {
         name: Token {
             kind: Identifier,
             lexeme: "bool",

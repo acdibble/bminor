@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function void;\")"
+---
+Err(
+    UnexpectedToken(
+        "expect '(' after function return type",
+    ),
+)

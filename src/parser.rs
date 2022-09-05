@@ -39,8 +39,35 @@ pub enum Expression<'a> {
     },
     Call {
         name: Token<'a>,
-        params: Vec<Expression<'a>>,
+        args: Vec<Expression<'a>>,
     },
+}
+
+const ATOMIC_TYPES: [TokenKind; 4] = [
+    TokenKind::Boolean,
+    TokenKind::Char,
+    TokenKind::Integer,
+    TokenKind::String,
+];
+
+#[derive(Debug)]
+pub enum ParamType<'a> {
+    Atomic {
+        kind: Token<'a>,
+    },
+    Array {
+        kind: Token<'a>,
+    },
+    Map {
+        key_kind: Token<'a>,
+        value_kind: Token<'a>,
+    },
+}
+
+#[derive(Debug)]
+pub struct Param<'a> {
+    pub name: Token<'a>,
+    pub kind: ParamType<'a>,
 }
 
 #[derive(Debug)]
@@ -66,12 +93,24 @@ pub enum Statement<'a> {
     Block {
         statements: Vec<Statement<'a>>,
     },
-    Declaration {
+
+    FunctionDeclaration {
         name: Token<'a>,
-        variable_type: VariableType<'a>,
+        return_kind: Token<'a>,
+        params: Vec<Param<'a>>,
+        body: Box<Statement<'a>>,
     },
     Print {
         expressions: Vec<Expression<'a>>,
+    },
+    PrototypeDeclaration {
+        name: Token<'a>,
+        return_kind: Token<'a>,
+        params: Vec<Param<'a>>,
+    },
+    VariableDeclaration {
+        name: Token<'a>,
+        variable_type: VariableType<'a>,
     },
 }
 
@@ -134,18 +173,12 @@ impl<'a> Parser<'a> {
         let next = self.advance()?;
 
         let stmt = match &next.kind {
-            TokenKind::Print => {
-                let print = self.print_statement()?;
-                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
-                Ok(print)
-            }
+            TokenKind::Print => self.print_statement(),
             TokenKind::LeftBrace => self.block_statement(),
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
-                let declaration = self.declaration_statement(next)?;
-                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
-                Ok(declaration)
+                self.declaration_statement(next)
             }
-            _ => todo!(),
+            _ => self.error_message("unable to parse statement"),
         }?;
 
         Ok(stmt)
@@ -169,6 +202,7 @@ impl<'a> Parser<'a> {
             TokenKind::String,
             TokenKind::Array,
             TokenKind::Map,
+            TokenKind::Function,
         ]) {
             Some(token) => token,
             _ => return self.error_message("expect type after variable declaration"),
@@ -183,7 +217,9 @@ impl<'a> Parser<'a> {
                     Some(self.expression()?)
                 };
 
-                Ok(Statement::Declaration {
+                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+
+                Ok(Statement::VariableDeclaration {
                     name,
                     variable_type: VariableType::Atomic { kind, initializer },
                 })
@@ -192,15 +228,7 @@ impl<'a> Parser<'a> {
                 self.expect(&[TokenKind::LeftBracket], "expect left bracket")?;
                 let size = self.expression()?;
                 self.expect(&[TokenKind::RightBracket], "expect right bracket")?;
-                let kind = self.expect(
-                    &[
-                        TokenKind::Boolean,
-                        TokenKind::Char,
-                        TokenKind::Integer,
-                        TokenKind::String,
-                    ],
-                    "expect array type",
-                )?;
+                let kind = self.expect(&ATOMIC_TYPES, "expect array type")?;
 
                 let initializer = if self.matches(TokenKind::Semicolon) {
                     None
@@ -223,7 +251,9 @@ impl<'a> Parser<'a> {
                     Some(elements)
                 };
 
-                Ok(Statement::Declaration {
+                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+
+                Ok(Statement::VariableDeclaration {
                     name,
                     variable_type: VariableType::Array {
                         kind,
@@ -233,24 +263,8 @@ impl<'a> Parser<'a> {
                 })
             }
             TokenKind::Map => {
-                let key = self.expect(
-                    &[
-                        TokenKind::Boolean,
-                        TokenKind::Char,
-                        TokenKind::Integer,
-                        TokenKind::String,
-                    ],
-                    "expect map key type",
-                )?;
-                let value = self.expect(
-                    &[
-                        TokenKind::Boolean,
-                        TokenKind::Char,
-                        TokenKind::Integer,
-                        TokenKind::String,
-                    ],
-                    "expect map value type",
-                )?;
+                let key = self.expect(&ATOMIC_TYPES, "expect map key type")?;
+                let value = self.expect(&ATOMIC_TYPES, "expect map value type")?;
 
                 let initializer = if self.matches(TokenKind::Semicolon) {
                     None
@@ -277,13 +291,104 @@ impl<'a> Parser<'a> {
                     Some(elements)
                 };
 
-                Ok(Statement::Declaration {
+                self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+
+                Ok(Statement::VariableDeclaration {
                     name,
                     variable_type: VariableType::Map {
                         key_kind: key,
                         value_kind: value,
                         initializer,
                     },
+                })
+            }
+            TokenKind::Function => {
+                let return_kind = self.expect(
+                    &[
+                        TokenKind::Boolean,
+                        TokenKind::Char,
+                        TokenKind::Integer,
+                        TokenKind::String,
+                        TokenKind::Void,
+                    ],
+                    "expect return type after 'function'",
+                )?;
+
+                self.expect(
+                    &[TokenKind::LeftParen],
+                    "expect '(' after function return type",
+                )?;
+
+                let mut params = Vec::new();
+
+                if !self.matches(TokenKind::RightParen) {
+                    loop {
+                        let name =
+                            self.expect(&[TokenKind::Identifier], "expect parameter identifier")?;
+                        self.expect(&[TokenKind::Colon], "expect ':' after param identifier")?;
+                        let token = self.expect(
+                            &[
+                                TokenKind::Boolean,
+                                TokenKind::Char,
+                                TokenKind::Integer,
+                                TokenKind::String,
+                                TokenKind::Array,
+                                TokenKind::Map,
+                            ],
+                            "expect param type",
+                        )?;
+
+                        let kind = match token.kind {
+                            TokenKind::Boolean
+                            | TokenKind::Char
+                            | TokenKind::Integer
+                            | TokenKind::String => ParamType::Atomic { kind: token },
+                            TokenKind::Array => {
+                                self.expect(&[TokenKind::LeftBracket], "expect '[' after 'array")?;
+                                self.expect(&[TokenKind::RightBracket], "expect ']'")?;
+                                let kind = self.expect(&ATOMIC_TYPES, "expect array type")?;
+                                ParamType::Array { kind }
+                            }
+                            TokenKind::Map => {
+                                let key_kind = self.expect(&ATOMIC_TYPES, "expect map key type")?;
+                                let value_kind =
+                                    self.expect(&ATOMIC_TYPES, "expect map value type")?;
+                                ParamType::Map {
+                                    key_kind,
+                                    value_kind,
+                                }
+                            }
+                            _ => unreachable!(),
+                        };
+
+                        params.push(Param { name, kind });
+
+                        if self.consume(&[TokenKind::Comma]).is_none() {
+                            break;
+                        }
+                    }
+                }
+
+                self.expect(&[TokenKind::RightParen], "expect ')' after param list")?;
+
+                if self.consume(&[TokenKind::Semicolon]).is_some() {
+                    return Ok(Statement::PrototypeDeclaration {
+                        name,
+                        return_kind,
+                        params,
+                    });
+                }
+
+                self.expect(&[TokenKind::Equal], "expect '=' after param list")?;
+                self.expect(&[TokenKind::LeftBrace], "expect function body")?;
+
+                let body = self.block_statement()?;
+
+                Ok(Statement::FunctionDeclaration {
+                    name,
+                    return_kind,
+                    params,
+                    body: Box::from(body),
                 })
             }
             _ => unreachable!(),
@@ -300,6 +405,8 @@ impl<'a> Parser<'a> {
                 break;
             }
         }
+
+        self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
 
         Ok(Statement::Print { expressions })
     }
@@ -441,23 +548,20 @@ impl<'a> Parser<'a> {
 
         if let Expression::Variable { name } = &expr {
             if self.consume(&[TokenKind::LeftParen]).is_some() {
-                let mut params = Vec::new();
+                let mut args = Vec::new();
 
-                if self.consume(&[TokenKind::RightParen]).is_none() {
+                if !self.matches(TokenKind::RightParen) {
                     loop {
-                        params.push(self.expression()?);
+                        args.push(self.expression()?);
                         if self.consume(&[TokenKind::Comma]).is_none() {
                             break;
                         }
                     }
-
-                    self.expect(&[TokenKind::RightParen], "expect ')' after param list")?;
                 }
 
-                expr = Expression::Call {
-                    name: *name,
-                    params,
-                }
+                self.expect(&[TokenKind::RightParen], "expect ')' after arg list")?;
+
+                expr = Expression::Call { name: *name, args }
             }
         }
 
@@ -648,6 +752,33 @@ mod test {
                 \"key\": 0,
                 \"key2\":1
             };"
+        ));
+
+        insta::assert_debug_snapshot!(parse_statement("fn: function;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function void;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function char;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function integer;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function string;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean;"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean ()"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean () ="));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean () = {"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean () = {}"));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean (a: integer) = {}"));
+        insta::assert_debug_snapshot!(parse_statement(
+            "fn: function boolean (a: integer, b: string, c: char, d: array [] integer, e: boolean, f: map string string) = {}"
+        ));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean (a: array ["));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean (a: array []"));
+        insta::assert_debug_snapshot!(parse_statement(
+            "fn: function boolean (a: array [] string);"
+        ));
+        insta::assert_debug_snapshot!(parse_statement("fn: function boolean (a: array [] char);"));
+        insta::assert_debug_snapshot!(parse_statement(
+            "fn: function boolean (a: array [] integer);"
+        ));
+        insta::assert_debug_snapshot!(parse_statement(
+            "fn: function boolean (a: array [] boolean);"
         ));
     }
 

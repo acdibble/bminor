@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function boolean (a: array []\")"
+---
+Err(
+    UnexpectedToken(
+        "expect array type",
+    ),
+)

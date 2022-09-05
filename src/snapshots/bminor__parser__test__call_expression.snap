@@ -9,6 +9,6 @@ Ok(
             lexeme: "x",
             line: 0,
         },
-        params: [],
+        args: [],
     },
 )

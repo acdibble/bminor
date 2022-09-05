@@ -1,0 +1,9 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function boolean()\")"
+---
+Err(
+    UnexpectedToken(
+        "expect '=' after param list",
+    ),
+)

@@ -1,0 +1,34 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function boolean (a: array [] char);\")"
+---
+Ok(
+    PrototypeDeclaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "fn",
+            line: 0,
+        },
+        return_kind: Token {
+            kind: Boolean,
+            lexeme: "boolean",
+            line: 0,
+        },
+        params: [
+            Param {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "a",
+                    line: 0,
+                },
+                kind: Array {
+                    kind: Token {
+                        kind: Char,
+                        lexeme: "char",
+                        line: 0,
+                    },
+                },
+            },
+        ],
+    },
+)

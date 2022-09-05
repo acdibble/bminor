@@ -1,0 +1,22 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"fn: function boolean() = {}\")"
+---
+Ok(
+    FunctionDeclaration {
+        name: Token {
+            kind: Identifier,
+            lexeme: "fn",
+            line: 0,
+        },
+        return_kind: Token {
+            kind: Boolean,
+            lexeme: "boolean",
+            line: 0,
+        },
+        params: [],
+        body: Block {
+            statements: [],
+        },
+    },
+)
