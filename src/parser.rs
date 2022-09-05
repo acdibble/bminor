@@ -108,6 +108,9 @@ pub enum Statement<'a> {
         return_kind: Token<'a>,
         params: Vec<Param<'a>>,
     },
+    Return {
+        value: Option<Expression<'a>>,
+    },
     VariableDeclaration {
         name: Token<'a>,
         variable_type: VariableType<'a>,
@@ -178,6 +181,7 @@ impl<'a> Parser<'a> {
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
                 self.declaration_statement(next)
             }
+            TokenKind::Return => self.return_statement(),
             _ => self.error_message("unable to parse statement"),
         }?;
 
@@ -409,6 +413,14 @@ impl<'a> Parser<'a> {
         self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
 
         Ok(Statement::Print { expressions })
+    }
+
+    fn return_statement(&mut self) -> ParseResult<Statement<'a>> {
+        let value = self.expression().ok();
+
+        self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
+
+        Ok(Statement::Return { value })
     }
 
     fn expression(&mut self) -> ParseResult<Expression<'a>> {
@@ -800,5 +812,13 @@ mod test {
         insta::assert_debug_snapshot!(parse_statement("print 1, 2 + 2, \"string\";"));
         insta::assert_debug_snapshot!(parse_statement("print 1"));
         insta::assert_debug_snapshot!(parse_statement("print fun();"));
+    }
+
+    #[test]
+    fn test_return_statements() {
+        insta::assert_debug_snapshot!(parse_statement("return"));
+        insta::assert_debug_snapshot!(parse_statement("return;"));
+        insta::assert_debug_snapshot!(parse_statement("return 1;"));
+        insta::assert_debug_snapshot!(parse_statement("return fn(0);"));
     }
 }

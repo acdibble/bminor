@@ -1,0 +1,26 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"return fn(0);\")"
+---
+Ok(
+    Return {
+        value: Some(
+            Call {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "fn",
+                    line: 0,
+                },
+                args: [
+                    Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "0",
+                            line: 0,
+                        },
+                    },
+                ],
+            },
+        ),
+    },
+)
