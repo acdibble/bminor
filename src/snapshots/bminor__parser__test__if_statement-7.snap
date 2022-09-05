@@ -1,0 +1,53 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"if (true) if (false) return 2; else return 0;\")"
+---
+Ok(
+    If {
+        condition: Boolean {
+            expression: Literal {
+                value: Token {
+                    kind: True,
+                    lexeme: "true",
+                    line: 0,
+                },
+            },
+        },
+        then: If {
+            condition: Boolean {
+                expression: Literal {
+                    value: Token {
+                        kind: False,
+                        lexeme: "false",
+                        line: 0,
+                    },
+                },
+            },
+            then: Return {
+                value: Some(
+                    Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 0,
+                        },
+                    },
+                ),
+            },
+            otherwise: Some(
+                Return {
+                    value: Some(
+                        Literal {
+                            value: Token {
+                                kind: IntegerLiteral,
+                                lexeme: "0",
+                                line: 0,
+                            },
+                        },
+                    ),
+                },
+            ),
+        },
+        otherwise: None,
+    },
+)

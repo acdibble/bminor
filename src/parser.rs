@@ -93,12 +93,16 @@ pub enum Statement<'a> {
     Block {
         statements: Vec<Statement<'a>>,
     },
-
     FunctionDeclaration {
         name: Token<'a>,
         return_kind: Token<'a>,
         params: Vec<Param<'a>>,
         body: Box<Statement<'a>>,
+    },
+    If {
+        condition: Expression<'a>,
+        then: Box<Statement<'a>>,
+        otherwise: Option<Box<Statement<'a>>>,
     },
     Print {
         expressions: Vec<Expression<'a>>,
@@ -176,11 +180,12 @@ impl<'a> Parser<'a> {
         let next = self.advance()?;
 
         let stmt = match &next.kind {
-            TokenKind::Print => self.print_statement(),
             TokenKind::LeftBrace => self.block_statement(),
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
                 self.declaration_statement(next)
             }
+            TokenKind::If => self.if_statement(),
+            TokenKind::Print => self.print_statement(),
             TokenKind::Return => self.return_statement(),
             _ => self.error_message("unable to parse statement"),
         }?;
@@ -397,6 +402,28 @@ impl<'a> Parser<'a> {
             }
             _ => unreachable!(),
         }
+    }
+
+    fn if_statement(&mut self) -> ParseResult<Statement<'a>> {
+        self.expect(&[TokenKind::LeftParen], "expect '(' after if")?;
+
+        let condition = self.expression()?;
+
+        self.expect(&[TokenKind::RightParen], "expect ')' after condition")?;
+
+        let then = self.statement()?;
+
+        let otherwise = if self.consume(&[TokenKind::Else]).is_some() {
+            Some(Box::from(self.statement()?))
+        } else {
+            None
+        };
+
+        Ok(Statement::If {
+            condition,
+            then: Box::from(then),
+            otherwise,
+        })
     }
 
     fn print_statement(&mut self) -> ParseResult<Statement<'a>> {
@@ -820,5 +847,24 @@ mod test {
         insta::assert_debug_snapshot!(parse_statement("return;"));
         insta::assert_debug_snapshot!(parse_statement("return 1;"));
         insta::assert_debug_snapshot!(parse_statement("return fn(0);"));
+    }
+
+    #[test]
+    fn test_if_statement() {
+        insta::assert_debug_snapshot!(parse_statement("if true"));
+        insta::assert_debug_snapshot!(parse_statement("if ()"));
+        insta::assert_debug_snapshot!(parse_statement("if (false;"));
+        insta::assert_debug_snapshot!(parse_statement("if (true) return;"));
+        insta::assert_debug_snapshot!(parse_statement("if (true) return 1; else return 0;"));
+        insta::assert_debug_snapshot!(parse_statement(
+            "if (true) {
+    return 1;
+} else {
+    return 0;
+}"
+        ));
+        insta::assert_debug_snapshot!(parse_statement(
+            "if (true) if (false) return 2; else return 0;"
+        ));
     }
 }

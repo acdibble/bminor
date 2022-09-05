@@ -1,0 +1,49 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"if (true) {\n    return 1;\n} else {\n    return 0;\n}\")"
+---
+Ok(
+    If {
+        condition: Boolean {
+            expression: Literal {
+                value: Token {
+                    kind: True,
+                    lexeme: "true",
+                    line: 0,
+                },
+            },
+        },
+        then: Block {
+            statements: [
+                Return {
+                    value: Some(
+                        Literal {
+                            value: Token {
+                                kind: IntegerLiteral,
+                                lexeme: "1",
+                                line: 1,
+                            },
+                        },
+                    ),
+                },
+            ],
+        },
+        otherwise: Some(
+            Block {
+                statements: [
+                    Return {
+                        value: Some(
+                            Literal {
+                                value: Token {
+                                    kind: IntegerLiteral,
+                                    lexeme: "0",
+                                    line: 3,
+                                },
+                            },
+                        ),
+                    },
+                ],
+            },
+        ),
+    },
+)
