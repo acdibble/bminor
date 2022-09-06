@@ -1,0 +1,91 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"for (x: integer = 1; x < 2; x = x + 1) {}\")"
+---
+Ok(
+    For {
+        initializer: Some(
+            VariableDeclaration {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "x",
+                    line: 0,
+                },
+                variable_type: Atomic {
+                    kind: Token {
+                        kind: Integer,
+                        lexeme: "integer",
+                        line: 0,
+                    },
+                    initializer: Some(
+                        Literal {
+                            value: Token {
+                                kind: IntegerLiteral,
+                                lexeme: "1",
+                                line: 0,
+                            },
+                        },
+                    ),
+                },
+            },
+        ),
+        condition: Some(
+            Boolean {
+                expression: Binary {
+                    left: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "x",
+                            line: 0,
+                        },
+                    },
+                    operator: Token {
+                        kind: Less,
+                        lexeme: "<",
+                        line: 0,
+                    },
+                    right: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 0,
+                        },
+                    },
+                },
+            },
+        ),
+        increment: Some(
+            Assignment {
+                target: Token {
+                    kind: Identifier,
+                    lexeme: "x",
+                    line: 0,
+                },
+                value: Binary {
+                    left: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "x",
+                            line: 0,
+                        },
+                    },
+                    operator: Token {
+                        kind: Plus,
+                        lexeme: "+",
+                        line: 0,
+                    },
+                    right: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "1",
+                            line: 0,
+                        },
+                    },
+                },
+            },
+        ),
+        body: Block {
+            statements: [],
+        },
+    },
+)

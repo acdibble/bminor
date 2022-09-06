@@ -1,6 +1,6 @@
 ---
 source: src/parser.rs
-expression: "parse_statement(\"fn: function boolean () = {\")"
+expression: "parse_statement(\"for (;;)\")"
 ---
 Err(
     UnexpectedToken(

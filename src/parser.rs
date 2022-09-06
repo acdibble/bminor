@@ -107,6 +107,12 @@ pub enum Statement<'a> {
         then: Box<Statement<'a>>,
         otherwise: Option<Box<Statement<'a>>>,
     },
+    For {
+        initializer: Option<Box<Statement<'a>>>,
+        condition: Option<Expression<'a>>,
+        increment: Option<Expression<'a>>,
+        body: Box<Statement<'a>>,
+    },
     Print {
         expressions: Vec<Expression<'a>>,
     },
@@ -193,13 +199,18 @@ impl<'a> Parser<'a> {
     }
 
     fn statement(&mut self) -> ParseResult<Statement<'a>> {
-        let next = self.advance()?;
+        let next = if let Some(token) = self.outstanding.take() {
+            token
+        } else {
+            self.advance()?
+        };
 
         let stmt = match &next.kind {
             TokenKind::LeftBrace => self.block_statement(),
             TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
                 self.declaration_statement(next)
             }
+            TokenKind::For => self.for_statement(),
             TokenKind::If => self.if_statement(),
             TokenKind::Print => self.print_statement(),
             TokenKind::Return => self.return_statement(),
@@ -424,10 +435,46 @@ impl<'a> Parser<'a> {
     }
 
     fn expression_statement(&mut self) -> ParseResult<Statement<'a>> {
-        let expression = self.expression()?;
-        println!("{expression:?}");
+        let expression = self
+            .expression()
+            .or_else(|_| self.error_message("expect statement"))?;
         self.expect(&[TokenKind::Semicolon], "expect ';' after statement")?;
         Ok(Statement::Expression { expression })
+    }
+
+    fn for_statement(&mut self) -> ParseResult<Statement<'a>> {
+        self.expect(&[TokenKind::LeftParen], "expect '(' after for")?;
+
+        let token = self.advance()?;
+
+        let initializer = match &token.kind {
+            TokenKind::Semicolon => None,
+            TokenKind::Identifier if self.consume(&[TokenKind::Colon]).is_some() => {
+                self.declaration_statement(token).ok()
+            }
+            _ => {
+                self.outstanding = Some(token);
+                self.expression_statement().ok()
+            }
+        }
+        .map(Box::from);
+
+        let condition = self.expression().ok();
+
+        self.expect(&[TokenKind::Semicolon], "expect ';' after condition")?;
+
+        let increment = self.expression().ok();
+
+        self.expect(&[TokenKind::RightParen], "expect ')' after increment")?;
+
+        let body = Box::from(self.statement()?);
+
+        Ok(Statement::For {
+            initializer,
+            condition,
+            increment,
+            body,
+        })
     }
 
     fn if_statement(&mut self) -> ParseResult<Statement<'a>> {
@@ -909,5 +956,21 @@ mod test {
         insta::assert_debug_snapshot!(parse_statement("x = fn();"));
         insta::assert_debug_snapshot!(parse_statement("1 * 1;"));
         insta::assert_debug_snapshot!(parse_statement("x = 1 + 1;"));
+    }
+
+    #[test]
+    fn test_for_statement() {
+        insta::assert_debug_snapshot!(parse_statement("for"));
+        insta::assert_debug_snapshot!(parse_statement("for ("));
+        insta::assert_debug_snapshot!(parse_statement("for (;"));
+        insta::assert_debug_snapshot!(parse_statement("for (;;"));
+        insta::assert_debug_snapshot!(parse_statement("for (;;)"));
+        insta::assert_debug_snapshot!(parse_statement("for (;;) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (x: integer = 1;;) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (x: integer = 1; x < 2;) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (x: integer = 1; x < 2; x = x + 1) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (x: integer = 1;; x = x + 1) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (; x < 2;) {}"));
+        insta::assert_debug_snapshot!(parse_statement("for (x = 1;;) {}"));
     }
 }

@@ -1,0 +1,38 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"for (; x < 2;) {}\")"
+---
+Ok(
+    For {
+        initializer: None,
+        condition: Some(
+            Boolean {
+                expression: Binary {
+                    left: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "x",
+                            line: 0,
+                        },
+                    },
+                    operator: Token {
+                        kind: Less,
+                        lexeme: "<",
+                        line: 0,
+                    },
+                    right: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "2",
+                            line: 0,
+                        },
+                    },
+                },
+            },
+        ),
+        increment: None,
+        body: Block {
+            statements: [],
+        },
+    },
+)

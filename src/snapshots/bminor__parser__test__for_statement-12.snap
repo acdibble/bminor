@@ -1,0 +1,31 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"for (x = 1;;) {}\")"
+---
+Ok(
+    For {
+        initializer: Some(
+            Expression {
+                expression: Assignment {
+                    target: Token {
+                        kind: Identifier,
+                        lexeme: "x",
+                        line: 0,
+                    },
+                    value: Literal {
+                        value: Token {
+                            kind: IntegerLiteral,
+                            lexeme: "1",
+                            line: 0,
+                        },
+                    },
+                },
+            },
+        ),
+        condition: None,
+        increment: None,
+        body: Block {
+            statements: [],
+        },
+    },
+)

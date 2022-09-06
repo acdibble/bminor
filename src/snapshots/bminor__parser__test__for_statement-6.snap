@@ -1,0 +1,14 @@
+---
+source: src/parser.rs
+expression: "parse_statement(\"for (;;) {}\")"
+---
+Ok(
+    For {
+        initializer: None,
+        condition: None,
+        increment: None,
+        body: Block {
+            statements: [],
+        },
+    },
+)
