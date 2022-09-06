@@ -10,6 +10,7 @@ Ok(
                 lexeme: "1",
                 line: 0,
             },
+            kind: Integer,
         },
         operator: Token {
             kind: Slash,
@@ -22,6 +23,7 @@ Ok(
                 lexeme: "3",
                 line: 0,
             },
+            kind: Integer,
         },
     },
 )

@@ -10,11 +10,7 @@ Ok(
             line: 0,
         },
         variable_type: Atomic {
-            kind: Token {
-                kind: Boolean,
-                lexeme: "boolean",
-                line: 0,
-            },
+            kind: Boolean,
             initializer: None,
         },
     },

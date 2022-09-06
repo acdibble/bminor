@@ -23,6 +23,7 @@ Ok(
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
             Assignment {
                 target: Token {
@@ -36,6 +37,7 @@ Ok(
                         lexeme: "2",
                         line: 0,
                     },
+                    kind: Integer,
                 },
             },
             Call {

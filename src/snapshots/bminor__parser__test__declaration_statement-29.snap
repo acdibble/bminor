@@ -10,16 +10,8 @@ Ok(
             line: 0,
         },
         variable_type: Map {
-            key_kind: Token {
-                kind: String,
-                lexeme: "string",
-                line: 0,
-            },
-            value_kind: Token {
-                kind: Integer,
-                lexeme: "integer",
-                line: 0,
-            },
+            key_kind: String,
+            value_kind: Integer,
             initializer: Some(
                 [
                     (
@@ -29,6 +21,7 @@ Ok(
                                 lexeme: "\"key\"",
                                 line: 1,
                             },
+                            kind: String,
                         },
                         Literal {
                             value: Token {
@@ -36,6 +29,7 @@ Ok(
                                 lexeme: "0",
                                 line: 1,
                             },
+                            kind: Integer,
                         },
                     ),
                     (
@@ -45,6 +39,7 @@ Ok(
                                 lexeme: "\"key2\"",
                                 line: 2,
                             },
+                            kind: String,
                         },
                         Literal {
                             value: Token {
@@ -52,6 +47,7 @@ Ok(
                                 lexeme: "1",
                                 line: 2,
                             },
+                            kind: Integer,
                         },
                     ),
                 ],

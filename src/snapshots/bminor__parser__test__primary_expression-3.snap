@@ -9,5 +9,6 @@ Ok(
             lexeme: "\"string literal\"",
             line: 0,
         },
+        kind: String,
     },
 )

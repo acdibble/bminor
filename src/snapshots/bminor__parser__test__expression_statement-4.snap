@@ -10,6 +10,7 @@ Ok(
                 lexeme: "'c'",
                 line: 0,
             },
+            kind: Char,
         },
     },
 )

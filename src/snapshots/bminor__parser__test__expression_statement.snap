@@ -4,14 +4,13 @@ expression: "parse_statement(\"true;\")"
 ---
 Ok(
     Expression {
-        expression: Boolean {
-            expression: Literal {
-                value: Token {
-                    kind: True,
-                    lexeme: "true",
-                    line: 0,
-                },
+        expression: Literal {
+            value: Token {
+                kind: True,
+                lexeme: "true",
+                line: 0,
             },
+            kind: Boolean,
         },
     },
 )

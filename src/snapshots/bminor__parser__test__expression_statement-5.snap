@@ -10,6 +10,7 @@ Ok(
                 lexeme: "\"string\"",
                 line: 0,
             },
+            kind: String,
         },
     },
 )

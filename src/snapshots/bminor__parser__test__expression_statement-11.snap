@@ -17,6 +17,7 @@ Ok(
                         lexeme: "1",
                         line: 0,
                     },
+                    kind: Integer,
                 },
                 operator: Token {
                     kind: Plus,
@@ -29,6 +30,7 @@ Ok(
                         lexeme: "1",
                         line: 0,
                     },
+                    kind: Integer,
                 },
             },
         },

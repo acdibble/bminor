@@ -11,6 +11,7 @@ Ok(
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
             operator: Token {
                 kind: Star,
@@ -23,6 +24,7 @@ Ok(
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
         },
     },

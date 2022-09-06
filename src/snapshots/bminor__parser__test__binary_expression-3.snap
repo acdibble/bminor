@@ -10,6 +10,7 @@ Ok(
                 lexeme: "1",
                 line: 0,
             },
+            kind: Integer,
         },
         operator: Token {
             kind: Modulo,
@@ -22,6 +23,7 @@ Ok(
                 lexeme: "4",
                 line: 0,
             },
+            kind: Integer,
         },
     },
 )

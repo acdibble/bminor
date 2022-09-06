@@ -10,17 +10,14 @@ Ok(
             line: 0,
         },
         variable_type: Array {
-            kind: Token {
-                kind: Integer,
-                lexeme: "integer",
-                line: 0,
-            },
+            kind: Integer,
             size: Literal {
                 value: Token {
                     kind: IntegerLiteral,
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
             initializer: Some(
                 [
@@ -30,6 +27,7 @@ Ok(
                             lexeme: "1",
                             line: 0,
                         },
+                        kind: Integer,
                     },
                     Literal {
                         value: Token {
@@ -37,6 +35,7 @@ Ok(
                             lexeme: "2",
                             line: 1,
                         },
+                        kind: Integer,
                     },
                     Literal {
                         value: Token {
@@ -44,6 +43,7 @@ Ok(
                             lexeme: "3",
                             line: 2,
                         },
+                        kind: Integer,
                     },
                 ],
             ),

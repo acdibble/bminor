@@ -17,6 +17,7 @@ Ok(
                         lexeme: "1",
                         line: 0,
                     },
+                    kind: Integer,
                 },
             },
         },

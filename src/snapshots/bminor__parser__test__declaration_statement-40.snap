@@ -22,11 +22,7 @@ Ok(
                     line: 0,
                 },
                 kind: Atomic {
-                    kind: Token {
-                        kind: Integer,
-                        lexeme: "integer",
-                        line: 0,
-                    },
+                    kind: Integer,
                 },
             },
         ],

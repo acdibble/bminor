@@ -22,11 +22,7 @@ Ok(
                     line: 0,
                 },
                 kind: Array {
-                    kind: Token {
-                        kind: Boolean,
-                        lexeme: "boolean",
-                        line: 0,
-                    },
+                    kind: Boolean,
                 },
             },
         ],

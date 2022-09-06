@@ -3,29 +3,13 @@ source: src/parser.rs
 expression: "parse_expression(\"a && b && c\")"
 ---
 Ok(
-    Boolean {
-        expression: Logical {
-            left: Boolean {
-                expression: Logical {
-                    left: Variable {
-                        name: Token {
-                            kind: Identifier,
-                            lexeme: "a",
-                            line: 0,
-                        },
-                    },
-                    operator: Token {
-                        kind: And,
-                        lexeme: "&&",
-                        line: 0,
-                    },
-                    right: Variable {
-                        name: Token {
-                            kind: Identifier,
-                            lexeme: "b",
-                            line: 0,
-                        },
-                    },
+    Logical {
+        left: Logical {
+            left: Variable {
+                name: Token {
+                    kind: Identifier,
+                    lexeme: "a",
+                    line: 0,
                 },
             },
             operator: Token {
@@ -36,9 +20,21 @@ Ok(
             right: Variable {
                 name: Token {
                     kind: Identifier,
-                    lexeme: "c",
+                    lexeme: "b",
                     line: 0,
                 },
+            },
+        },
+        operator: Token {
+            kind: And,
+            lexeme: "&&",
+            line: 0,
+        },
+        right: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "c",
+                line: 0,
             },
         },
     },

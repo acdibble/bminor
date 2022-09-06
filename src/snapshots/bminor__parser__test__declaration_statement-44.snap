@@ -22,11 +22,7 @@ Ok(
                     line: 0,
                 },
                 kind: Array {
-                    kind: Token {
-                        kind: String,
-                        lexeme: "string",
-                        line: 0,
-                    },
+                    kind: String,
                 },
             },
         ],

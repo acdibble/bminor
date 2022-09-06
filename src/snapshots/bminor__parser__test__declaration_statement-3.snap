@@ -10,11 +10,7 @@ Ok(
             line: 0,
         },
         variable_type: Atomic {
-            kind: Token {
-                kind: Integer,
-                lexeme: "integer",
-                line: 0,
-            },
+            kind: Integer,
             initializer: Some(
                 Binary {
                     left: Literal {
@@ -23,6 +19,7 @@ Ok(
                             lexeme: "2",
                             line: 0,
                         },
+                        kind: Integer,
                     },
                     operator: Token {
                         kind: Star,
@@ -35,6 +32,7 @@ Ok(
                             lexeme: "2",
                             line: 0,
                         },
+                        kind: Integer,
                     },
                 },
             ),

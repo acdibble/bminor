@@ -9,5 +9,6 @@ Ok(
             lexeme: "'a'",
             line: 0,
         },
+        kind: Char,
     },
 )

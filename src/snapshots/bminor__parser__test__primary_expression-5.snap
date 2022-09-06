@@ -10,6 +10,7 @@ Ok(
                 lexeme: "2",
                 line: 0,
             },
+            kind: Integer,
         },
     },
 )

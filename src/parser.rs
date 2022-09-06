@@ -1,46 +1,60 @@
-use crate::lexer::{Lexer, Token, TokenKind};
-use std::iter::Peekable;
+use crate::{
+    expression::Expression,
+    lexer::{Lexer, Token, TokenKind},
+    statement::Statement,
+};
+use std::{
+    convert::{TryFrom, TryInto},
+    iter::Peekable,
+};
 
 #[derive(Debug)]
-pub enum Expression<'a> {
-    Variable {
-        name: Token<'a>,
-    },
-    Literal {
-        value: Token<'a>,
-    },
-    Boolean {
-        expression: Box<Expression<'a>>,
-    },
-    Grouping {
-        expression: Box<Expression<'a>>,
-    },
-    Unary {
-        operator: Token<'a>,
-        value: Box<Expression<'a>>,
-    },
-    Exponent {
-        base: Box<Expression<'a>>,
-        power: Box<Expression<'a>>,
-    },
-    Binary {
-        left: Box<Expression<'a>>,
-        operator: Token<'a>,
-        right: Box<Expression<'a>>,
-    },
-    Logical {
-        left: Box<Expression<'a>>,
-        operator: Token<'a>,
-        right: Box<Expression<'a>>,
-    },
-    Assignment {
-        target: Token<'a>,
-        value: Box<Expression<'a>>,
-    },
-    Call {
-        name: Token<'a>,
-        args: Vec<Expression<'a>>,
-    },
+pub enum ParseError {
+    UnexpectedToken(String),
+    UnexpectedParserError,
+}
+
+type ParseResult<T> = Result<T, ParseError>;
+
+#[derive(Debug)]
+pub enum BMinorType {
+    Void,
+    Boolean,
+    Char,
+    Integer,
+    String,
+    Array,
+    Map,
+    Function,
+}
+
+impl TryFrom<&Token<'_>> for BMinorType {
+    type Error = ParseError;
+
+    fn try_from(token: &Token<'_>) -> ParseResult<Self> {
+        match token.kind {
+            TokenKind::Void => Ok(Self::Void),
+            TokenKind::Boolean | TokenKind::True | TokenKind::False => Ok(Self::Boolean),
+            TokenKind::CharLiteral | TokenKind::Char => Ok(Self::Char),
+            TokenKind::IntegerLiteral | TokenKind::Integer => Ok(Self::Integer),
+            TokenKind::StringLiteral | TokenKind::String => Ok(Self::String),
+            TokenKind::Array => Ok(Self::Array),
+            TokenKind::Map => Ok(Self::Map),
+            TokenKind::Function => Ok(Self::Function),
+            _ => Err(ParseError::UnexpectedToken(format!(
+                "failed to convert {:?} to type",
+                token
+            ))),
+        }
+    }
+}
+
+impl TryFrom<Token<'_>> for BMinorType {
+    type Error = ParseError;
+
+    fn try_from(token: Token<'_>) -> ParseResult<Self> {
+        Self::try_from(&token)
+    }
 }
 
 const ATOMIC_TYPES: [TokenKind; 4] = [
@@ -51,92 +65,42 @@ const ATOMIC_TYPES: [TokenKind; 4] = [
 ];
 
 #[derive(Debug)]
-pub enum ParamType<'a> {
+pub enum ParamType {
     Atomic {
-        kind: Token<'a>,
+        kind: BMinorType,
     },
     Array {
-        kind: Token<'a>,
+        kind: BMinorType,
     },
     Map {
-        key_kind: Token<'a>,
-        value_kind: Token<'a>,
+        key_kind: BMinorType,
+        value_kind: BMinorType,
     },
 }
 
 #[derive(Debug)]
 pub struct Param<'a> {
     pub name: Token<'a>,
-    pub kind: ParamType<'a>,
+    pub kind: ParamType,
 }
 
 #[derive(Debug)]
 pub enum VariableType<'a> {
     Atomic {
-        kind: Token<'a>,
+        kind: BMinorType,
         initializer: Option<Expression<'a>>,
     },
     Array {
-        kind: Token<'a>,
+        kind: BMinorType,
         size: Expression<'a>,
         initializer: Option<Vec<Expression<'a>>>,
     },
     Map {
-        key_kind: Token<'a>,
-        value_kind: Token<'a>,
+        key_kind: BMinorType,
+        value_kind: BMinorType,
         initializer: Option<Vec<(Expression<'a>, Expression<'a>)>>,
     },
 }
-
-#[derive(Debug)]
-pub enum Statement<'a> {
-    Block {
-        statements: Vec<Statement<'a>>,
-    },
-    Expression {
-        expression: Expression<'a>,
-    },
-    FunctionDeclaration {
-        name: Token<'a>,
-        return_kind: Token<'a>,
-        params: Vec<Param<'a>>,
-        body: Box<Statement<'a>>,
-    },
-    If {
-        condition: Expression<'a>,
-        then: Box<Statement<'a>>,
-        otherwise: Option<Box<Statement<'a>>>,
-    },
-    For {
-        initializer: Option<Box<Statement<'a>>>,
-        condition: Option<Expression<'a>>,
-        increment: Option<Expression<'a>>,
-        body: Box<Statement<'a>>,
-    },
-    Print {
-        expressions: Vec<Expression<'a>>,
-    },
-    PrototypeDeclaration {
-        name: Token<'a>,
-        return_kind: Token<'a>,
-        params: Vec<Param<'a>>,
-    },
-    Return {
-        value: Option<Expression<'a>>,
-    },
-    VariableDeclaration {
-        name: Token<'a>,
-        variable_type: VariableType<'a>,
-    },
-}
-
-#[derive(Debug)]
-pub enum ParseError {
-    UnexpectedToken(String),
-    UnexpectedParserError,
-}
-
-type ParseResult<T> = Result<T, ParseError>;
 
 pub struct Parser<'a> {
     tokens: Peekable<Lexer<'a>>,
@@ -260,7 +224,10 @@ impl<'a> Parser<'a> {
 
                 Ok(Statement::VariableDeclaration {
                     name,
-                    variable_type: VariableType::Atomic { kind, initializer },
+                    variable_type: VariableType::Atomic {
+                        kind: kind.try_into()?,
+                        initializer,
+                    },
                 })
             }
             TokenKind::Array => {
@@ -295,7 +262,7 @@ impl<'a> Parser<'a> {
                 Ok(Statement::VariableDeclaration {
                     name,
                     variable_type: VariableType::Array {
-                        kind,
+                        kind: kind.try_into()?,
                         size,
                         initializer,
                     },
@@ -335,8 +302,8 @@ impl<'a> Parser<'a> {
                 Ok(Statement::VariableDeclaration {
                     name,
                     variable_type: VariableType::Map {
-                        key_kind: key,
-                        value_kind: value,
+                        key_kind: key.try_into()?,
+                        value_kind: value.try_into()?,
                         initializer,
                     },
                 })
@@ -381,20 +348,24 @@ impl<'a> Parser<'a> {
                             TokenKind::Boolean
                             | TokenKind::Char
                             | TokenKind::Integer
-                            | TokenKind::String => ParamType::Atomic { kind: token },
+                            | TokenKind::String => ParamType::Atomic {
+                                kind: token.try_into()?,
+                            },
                             TokenKind::Array => {
                                 self.expect(&[TokenKind::LeftBracket], "expect '[' after 'array")?;
                                 self.expect(&[TokenKind::RightBracket], "expect ']'")?;
                                 let kind = self.expect(&ATOMIC_TYPES, "expect array type")?;
-                                ParamType::Array { kind }
+                                ParamType::Array {
+                                    kind: kind.try_into()?,
+                                }
                             }
                             TokenKind::Map => {
                                 let key_kind = self.expect(&ATOMIC_TYPES, "expect map key type")?;
                                 let value_kind =
                                     self.expect(&ATOMIC_TYPES, "expect map value type")?;
                                 ParamType::Map {
-                                    key_kind,
-                                    value_kind,
+                                    key_kind: key_kind.try_into()?,
+                                    value_kind: value_kind.try_into()?,
                                 }
                             }
                             _ => unreachable!(),
@@ -547,13 +518,11 @@ impl<'a> Parser<'a> {
         let mut expr = self.and()?;
 
         while let Some(operator) = self.consume(&[TokenKind::Or]) {
-            expr = Expression::Boolean {
-                expression: Box::from(Expression::Logical {
-                    left: Box::from(expr),
-                    operator,
-                    right: Box::from(self.and()?),
-                }),
-            }
+            expr = Expression::Logical {
+                left: Box::from(expr),
+                operator,
+                right: Box::from(self.and()?),
+            };
         }
 
         Ok(expr)
@@ -563,13 +532,11 @@ impl<'a> Parser<'a> {
         let mut expr = self.comparison()?;
 
         while let Some(operator) = self.consume(&[TokenKind::And]) {
-            expr = Expression::Boolean {
-                expression: Box::from(Expression::Logical {
-                    left: Box::from(expr),
-                    operator,
-                    right: Box::from(self.comparison()?),
-                }),
-            }
+            expr = Expression::Logical {
+                left: Box::from(expr),
+                operator,
+                right: Box::from(self.comparison()?),
+            };
         }
 
         Ok(expr)
@@ -586,13 +553,11 @@ impl<'a> Parser<'a> {
             TokenKind::EqualEqual,
             TokenKind::BangEqual,
         ]) {
-            expr = Expression::Boolean {
-                expression: Box::from(Expression::Binary {
-                    left: Box::from(expr),
-                    operator,
-                    right: Box::from(self.term()?),
-                }),
-            }
+            expr = Expression::Binary {
+                left: Box::from(expr),
+                operator,
+                right: Box::from(self.term()?),
+            };
         }
 
         Ok(expr)
@@ -688,10 +653,14 @@ impl<'a> Parser<'a> {
             TokenKind::IntegerLiteral,
             TokenKind::StringLiteral,
         ]) {
-            Ok(Expression::Literal { value })
+            Ok(Expression::Literal {
+                kind: BMinorType::try_from(&value)?,
+                value,
+            })
         } else if let Some(value) = self.consume(&[TokenKind::True, TokenKind::False]) {
-            Ok(Expression::Boolean {
-                expression: Box::from(Expression::Literal { value }),
+            Ok(Expression::Literal {
+                kind: BMinorType::try_from(&value)?,
+                value,
             })
         } else if let Some(name) = self.consume(&[TokenKind::Identifier]) {
             self.handle_postfix(Expression::Variable { name })

@@ -4,14 +4,13 @@ expression: "parse_statement(\"if (true) {\n    return 1;\n} else {\n    return 
 ---
 Ok(
     If {
-        condition: Boolean {
-            expression: Literal {
-                value: Token {
-                    kind: True,
-                    lexeme: "true",
-                    line: 0,
-                },
+        condition: Literal {
+            value: Token {
+                kind: True,
+                lexeme: "true",
+                line: 0,
             },
+            kind: Boolean,
         },
         then: Block {
             statements: [
@@ -23,6 +22,7 @@ Ok(
                                 lexeme: "1",
                                 line: 1,
                             },
+                            kind: Integer,
                         },
                     ),
                 },
@@ -39,6 +39,7 @@ Ok(
                                     lexeme: "0",
                                     line: 3,
                                 },
+                                kind: Integer,
                             },
                         ),
                     },

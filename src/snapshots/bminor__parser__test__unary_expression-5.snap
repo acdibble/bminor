@@ -9,14 +9,13 @@ Ok(
             lexeme: "!",
             line: 0,
         },
-        value: Boolean {
-            expression: Literal {
-                value: Token {
-                    kind: True,
-                    lexeme: "true",
-                    line: 0,
-                },
+        value: Literal {
+            value: Token {
+                kind: True,
+                lexeme: "true",
+                line: 0,
             },
+            kind: Boolean,
         },
     },
 )

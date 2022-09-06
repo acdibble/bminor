@@ -11,6 +11,7 @@ Ok(
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
             Binary {
                 left: Literal {
@@ -19,6 +20,7 @@ Ok(
                         lexeme: "2",
                         line: 0,
                     },
+                    kind: Integer,
                 },
                 operator: Token {
                     kind: Plus,
@@ -31,6 +33,7 @@ Ok(
                         lexeme: "2",
                         line: 0,
                     },
+                    kind: Integer,
                 },
             },
             Literal {
@@ -39,6 +42,7 @@ Ok(
                     lexeme: "\"string\"",
                     line: 0,
                 },
+                kind: String,
             },
         ],
     },

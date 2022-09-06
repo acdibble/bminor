@@ -12,11 +12,7 @@ Ok(
                     line: 0,
                 },
                 variable_type: Atomic {
-                    kind: Token {
-                        kind: Integer,
-                        lexeme: "integer",
-                        line: 0,
-                    },
+                    kind: Integer,
                     initializer: Some(
                         Literal {
                             value: Token {
@@ -24,33 +20,33 @@ Ok(
                                 lexeme: "1",
                                 line: 0,
                             },
+                            kind: Integer,
                         },
                     ),
                 },
             },
         ),
         condition: Some(
-            Boolean {
-                expression: Binary {
-                    left: Variable {
-                        name: Token {
-                            kind: Identifier,
-                            lexeme: "x",
-                            line: 0,
-                        },
-                    },
-                    operator: Token {
-                        kind: Less,
-                        lexeme: "<",
+            Binary {
+                left: Variable {
+                    name: Token {
+                        kind: Identifier,
+                        lexeme: "x",
                         line: 0,
                     },
-                    right: Literal {
-                        value: Token {
-                            kind: IntegerLiteral,
-                            lexeme: "2",
-                            line: 0,
-                        },
+                },
+                operator: Token {
+                    kind: Less,
+                    lexeme: "<",
+                    line: 0,
+                },
+                right: Literal {
+                    value: Token {
+                        kind: IntegerLiteral,
+                        lexeme: "2",
+                        line: 0,
                     },
+                    kind: Integer,
                 },
             },
         ),

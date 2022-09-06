@@ -10,17 +10,14 @@ Ok(
             line: 0,
         },
         variable_type: Array {
-            kind: Token {
-                kind: String,
-                lexeme: "string",
-                line: 0,
-            },
+            kind: String,
             size: Literal {
                 value: Token {
                     kind: IntegerLiteral,
                     lexeme: "1",
                     line: 0,
                 },
+                kind: Integer,
             },
             initializer: None,
         },

@@ -12,11 +12,7 @@ Ok(
                     line: 1,
                 },
                 variable_type: Atomic {
-                    kind: Token {
-                        kind: Integer,
-                        lexeme: "integer",
-                        line: 1,
-                    },
+                    kind: Integer,
                     initializer: None,
                 },
             },
@@ -27,11 +23,7 @@ Ok(
                     line: 2,
                 },
                 variable_type: Atomic {
-                    kind: Token {
-                        kind: String,
-                        lexeme: "string",
-                        line: 2,
-                    },
+                    kind: String,
                     initializer: Some(
                         Literal {
                             value: Token {
@@ -39,6 +31,7 @@ Ok(
                                 lexeme: "\"hello world\"",
                                 line: 2,
                             },
+                            kind: String,
                         },
                     ),
                 },

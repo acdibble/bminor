@@ -22,11 +22,7 @@ Ok(
                     line: 0,
                 },
                 kind: Atomic {
-                    kind: Token {
-                        kind: Integer,
-                        lexeme: "integer",
-                        line: 0,
-                    },
+                    kind: Integer,
                 },
             },
             Param {
@@ -36,11 +32,7 @@ Ok(
                     line: 0,
                 },
                 kind: Atomic {
-                    kind: Token {
-                        kind: String,
-                        lexeme: "string",
-                        line: 0,
-                    },
+                    kind: String,
                 },
             },
             Param {
@@ -50,11 +42,7 @@ Ok(
                     line: 0,
                 },
                 kind: Atomic {
-                    kind: Token {
-                        kind: Char,
-                        lexeme: "char",
-                        line: 0,
-                    },
+                    kind: Char,
                 },
             },
             Param {
@@ -64,11 +52,7 @@ Ok(
                     line: 0,
                 },
                 kind: Array {
-                    kind: Token {
-                        kind: Integer,
-                        lexeme: "integer",
-                        line: 0,
-                    },
+                    kind: Integer,
                 },
             },
             Param {
@@ -78,11 +62,7 @@ Ok(
                     line: 0,
                 },
                 kind: Atomic {
-                    kind: Token {
-                        kind: Boolean,
-                        lexeme: "boolean",
-                        line: 0,
-                    },
+                    kind: Boolean,
                 },
             },
             Param {
@@ -92,16 +72,8 @@ Ok(
                     line: 0,
                 },
                 kind: Map {
-                    key_kind: Token {
-                        kind: String,
-                        lexeme: "string",
-                        line: 0,
-                    },
-                    value_kind: Token {
-                        kind: String,
-                        lexeme: "string",
-                        line: 0,
-                    },
+                    key_kind: String,
+                    value_kind: String,
                 },
             },
         ],
