@@ -4,7 +4,7 @@ expression: "parse_expression(\"x(a)\")"
 ---
 Ok(
     Call {
-        name: Token {
+        target: Token {
             kind: Identifier,
             lexeme: "x",
             line: 0,

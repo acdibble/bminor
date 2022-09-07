@@ -31,11 +31,15 @@ pub enum Expression<'a> {
         right: Box<Expression<'a>>,
     },
     Assignment {
-        target: Token<'a>,
+        target: Box<Expression<'a>>,
         value: Box<Expression<'a>>,
     },
     Call {
-        name: Token<'a>,
+        target: Token<'a>,
         args: Vec<Expression<'a>>,
+    },
+    Subscript {
+        target: Token<'a>,
+        key: Box<Expression<'a>>,
     },
 }

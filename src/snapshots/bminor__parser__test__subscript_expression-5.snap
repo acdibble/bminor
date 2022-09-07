@@ -1,6 +1,6 @@
 ---
 source: src/parser.rs
-expression: "parse_expression(\"x()\")"
+expression: "parse_expression(\"x()[1] = 0\")"
 ---
 Ok(
     Call {

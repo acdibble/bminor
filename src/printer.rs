@@ -43,7 +43,8 @@ impl Visitor<std::io::Result<()>> for Printer {
     fn visit_expression(&mut self, expression: &Expression) -> std::io::Result<()> {
         match expression {
             Expression::Assignment { target, value } => {
-                write!(self, "{} = ", target.lexeme)?;
+                self.visit_expression(target)?;
+                write!(self, " = ")?;
                 self.visit_expression(&value)
             }
             Expression::Variable { name } => write!(self, "{}", name.lexeme),
@@ -78,8 +79,8 @@ impl Visitor<std::io::Result<()>> for Printer {
                 write!(self, " {} ", operator.lexeme)?;
                 self.visit_expression(right)
             }
-            Expression::Call { name, args } => {
-                write!(self, "{}(", name.lexeme)?;
+            Expression::Call { target, args } => {
+                write!(self, "{}(", target.lexeme)?;
 
                 let mut should_write = false;
 
@@ -92,6 +93,11 @@ impl Visitor<std::io::Result<()>> for Printer {
                 }
 
                 write!(self, ")")
+            }
+            Expression::Subscript { target, key } => {
+                write!(self, "{}[", target.lexeme)?;
+                self.visit_expression(key)?;
+                write!(self, "]")
             }
         }
     }

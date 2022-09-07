@@ -7,10 +7,12 @@ Ok(
         initializer: Some(
             Expression {
                 expression: Assignment {
-                    target: Token {
-                        kind: Identifier,
-                        lexeme: "x",
-                        line: 0,
+                    target: Variable {
+                        name: Token {
+                            kind: Identifier,
+                            lexeme: "x",
+                            line: 0,
+                        },
                     },
                     value: Literal {
                         value: Token {

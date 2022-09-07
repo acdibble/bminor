@@ -5,7 +5,7 @@ expression: "parse_statement(\"fn();\")"
 Ok(
     Expression {
         expression: Call {
-            name: Token {
+            target: Token {
                 kind: Identifier,
                 lexeme: "fn",
                 line: 0,

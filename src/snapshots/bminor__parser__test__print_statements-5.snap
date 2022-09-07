@@ -6,7 +6,7 @@ Ok(
     Print {
         expressions: [
             Call {
-                name: Token {
+                target: Token {
                     kind: Identifier,
                     lexeme: "fun",
                     line: 0,

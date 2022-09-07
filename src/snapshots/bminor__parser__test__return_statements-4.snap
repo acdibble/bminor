@@ -6,7 +6,7 @@ Ok(
     Return {
         value: Some(
             Call {
-                name: Token {
+                target: Token {
                     kind: Identifier,
                     lexeme: "fn",
                     line: 0,

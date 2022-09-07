@@ -4,10 +4,12 @@ expression: "parse_expression(\"x = a && b\")"
 ---
 Ok(
     Assignment {
-        target: Token {
-            kind: Identifier,
-            lexeme: "x",
-            line: 0,
+        target: Variable {
+            name: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
         },
         value: Logical {
             left: Variable {

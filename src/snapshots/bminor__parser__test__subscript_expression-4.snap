@@ -1,0 +1,31 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"x[1] = 0\")"
+---
+Ok(
+    Assignment {
+        target: Subscript {
+            target: Token {
+                kind: Identifier,
+                lexeme: "x",
+                line: 0,
+            },
+            key: Literal {
+                value: Token {
+                    kind: IntegerLiteral,
+                    lexeme: "1",
+                    line: 0,
+                },
+                kind: Integer,
+            },
+        },
+        value: Literal {
+            value: Token {
+                kind: IntegerLiteral,
+                lexeme: "0",
+                line: 0,
+            },
+            kind: Integer,
+        },
+    },
+)

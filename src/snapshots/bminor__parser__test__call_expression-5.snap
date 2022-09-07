@@ -4,7 +4,7 @@ expression: "parse_expression(\"x(a, 1, y = 2, z(g()))\")"
 ---
 Ok(
     Call {
-        name: Token {
+        target: Token {
             kind: Identifier,
             lexeme: "x",
             line: 0,
@@ -26,10 +26,12 @@ Ok(
                 kind: Integer,
             },
             Assignment {
-                target: Token {
-                    kind: Identifier,
-                    lexeme: "y",
-                    line: 0,
+                target: Variable {
+                    name: Token {
+                        kind: Identifier,
+                        lexeme: "y",
+                        line: 0,
+                    },
                 },
                 value: Literal {
                     value: Token {
@@ -41,14 +43,14 @@ Ok(
                 },
             },
             Call {
-                name: Token {
+                target: Token {
                     kind: Identifier,
                     lexeme: "z",
                     line: 0,
                 },
                 args: [
                     Call {
-                        name: Token {
+                        target: Token {
                             kind: Identifier,
                             lexeme: "g",
                             line: 0,

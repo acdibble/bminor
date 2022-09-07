@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: "parse_expression(\"m[\\\"hello\\\"]\")"
+---
+Ok(
+    Subscript {
+        target: Token {
+            kind: Identifier,
+            lexeme: "m",
+            line: 0,
+        },
+        key: Literal {
+            value: Token {
+                kind: StringLiteral,
+                lexeme: "\"hello\"",
+                line: 0,
+            },
+            kind: String,
+        },
+    },
+)

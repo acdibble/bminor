@@ -409,13 +409,13 @@ impl<'a> Parser<'a> {
                 self.expect(&[TokenKind::Equal], "expect '=' after param list")?;
                 self.expect(&[TokenKind::LeftBrace], "expect function body")?;
 
-                let body = self.block_statement()?;
+                let body = self.block_statement()?.into();
 
                 Ok(Statement::FunctionDeclaration {
                     name,
                     return_kind,
                     params,
-                    body: Box::from(body),
+                    body,
                 })
             }
             _ => unreachable!(),
@@ -455,7 +455,7 @@ impl<'a> Parser<'a> {
 
         self.expect(&[TokenKind::RightParen], "expect ')' after increment")?;
 
-        let body = Box::from(self.statement()?);
+        let body = self.statement()?.into();
 
         Ok(Statement::For {
             initializer,
@@ -475,14 +475,14 @@ impl<'a> Parser<'a> {
         let then = self.statement()?;
 
         let otherwise = if self.consume(&[TokenKind::Else]).is_some() {
-            Some(Box::from(self.statement()?))
+            Some(self.statement()?.into())
         } else {
             None
         };
 
         Ok(Statement::If {
             condition,
-            then: Box::from(then),
+            then: then.into(),
             otherwise,
         })
     }
@@ -519,10 +519,14 @@ impl<'a> Parser<'a> {
         let mut expr = self.or()?;
 
         if let Some(_) = self.consume(&[TokenKind::Equal]) {
-            expr = match expr {
-                Expression::Variable { name } => Expression::Assignment {
-                    target: name,
-                    value: Box::from(self.assignment()?),
+            expr = match &expr {
+                Expression::Variable { .. } => Expression::Assignment {
+                    target: expr.into(),
+                    value: self.assignment()?.into(),
+                },
+                Expression::Subscript { .. } => Expression::Assignment {
+                    target: expr.into(),
+                    value: self.assignment()?.into(),
                 },
                 _ => return self.error_message("Invalid assignment target."),
             };
@@ -536,9 +540,9 @@ impl<'a> Parser<'a> {
 
         while let Some(operator) = self.consume(&[TokenKind::Or]) {
             expr = Expression::Logical {
-                left: Box::from(expr),
+                left: expr.into(),
                 operator,
-                right: Box::from(self.and()?),
+                right: self.and()?.into(),
             };
         }
 
@@ -550,9 +554,9 @@ impl<'a> Parser<'a> {
 
         while let Some(operator) = self.consume(&[TokenKind::And]) {
             expr = Expression::Logical {
-                left: Box::from(expr),
+                left: expr.into(),
                 operator,
-                right: Box::from(self.comparison()?),
+                right: self.comparison()?.into(),
             };
         }
 
@@ -571,9 +575,9 @@ impl<'a> Parser<'a> {
             TokenKind::BangEqual,
         ]) {
             expr = Expression::Binary {
-                left: Box::from(expr),
+                left: expr.into(),
                 operator,
-                right: Box::from(self.term()?),
+                right: self.term()?.into(),
             };
         }
 
@@ -585,9 +589,9 @@ impl<'a> Parser<'a> {
 
         while let Some(operator) = self.consume(&[TokenKind::Plus, TokenKind::Minus]) {
             expr = Expression::Binary {
-                left: Box::from(expr),
+                left: expr.into(),
                 operator,
-                right: Box::from(self.factor()?),
+                right: self.factor()?.into(),
             }
         }
 
@@ -601,9 +605,9 @@ impl<'a> Parser<'a> {
             self.consume(&[TokenKind::Star, TokenKind::Slash, TokenKind::Modulo])
         {
             expr = Expression::Binary {
-                left: Box::from(expr),
+                left: expr.into(),
                 operator,
-                right: Box::from(self.exponent()?),
+                right: self.exponent()?.into(),
             }
         }
 
@@ -617,8 +621,8 @@ impl<'a> Parser<'a> {
             let power = self.unary()?;
 
             expr = Expression::Exponent {
-                base: Box::from(expr),
-                power: Box::from(power),
+                base: expr.into(),
+                power: power.into(),
             }
         }
 
@@ -630,7 +634,7 @@ impl<'a> Parser<'a> {
         {
             Ok(Expression::Unary {
                 operator,
-                value: Box::from(self.call()?),
+                value: self.call()?.into(),
             })
         } else {
             self.call()
@@ -655,7 +659,13 @@ impl<'a> Parser<'a> {
 
                 self.expect(&[TokenKind::RightParen], "expect ')' after arg list")?;
 
-                Expression::Call { name, args }
+                Expression::Call { target: name, args }
+            } else if self.consume(&[TokenKind::LeftBracket]).is_some() {
+                let key = self.expression()?.into();
+
+                self.expect(&[TokenKind::RightBracket], "expect ']' after key")?;
+
+                Expression::Subscript { target: name, key }
             } else {
                 Expression::Variable { name }
             }
@@ -690,7 +700,7 @@ impl<'a> Parser<'a> {
             )?;
 
             self.handle_postfix(Expression::Grouping {
-                expression: Box::from(expression),
+                expression: expression.into(),
             })
         } else {
             self.error_message("expect expression")
@@ -701,7 +711,7 @@ impl<'a> Parser<'a> {
         if let Some(operator) = self.consume(&[TokenKind::PlusPlus, TokenKind::MinusMinus]) {
             Ok(Expression::Unary {
                 operator,
-                value: Box::from(expr),
+                value: expr.into(),
             })
         } else {
             Ok(expr)
@@ -807,6 +817,17 @@ mod test {
         insta::assert_debug_snapshot!(parse_expression("x(a,"));
         insta::assert_debug_snapshot!(parse_expression("x(a"));
         insta::assert_debug_snapshot!(parse_expression("x("));
+    }
+
+    #[test]
+    fn test_subscript_expression() {
+        insta::assert_debug_snapshot!(parse_expression("x["));
+        insta::assert_debug_snapshot!(parse_expression("x[1"));
+        insta::assert_debug_snapshot!(parse_expression("x[1]"));
+        insta::assert_debug_snapshot!(parse_expression("x[1] = 0"));
+        insta::assert_debug_snapshot!(parse_expression("x()[1] = 0"));
+        insta::assert_debug_snapshot!(parse_expression("m[\"hello\"]"));
+        insta::assert_debug_snapshot!(parse_expression("m[\"hello\"] = \"test\""));
     }
 
     #[test]
