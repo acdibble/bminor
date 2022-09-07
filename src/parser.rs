@@ -5,6 +5,7 @@ use crate::{
 };
 use std::{
     convert::{TryFrom, TryInto},
+    fmt::Display,
     iter::Peekable,
 };
 
@@ -26,6 +27,22 @@ pub enum BMinorType {
     Array,
     Map,
     Function,
+}
+
+impl Display for BMinorType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let value = match self {
+            BMinorType::Void => "void",
+            BMinorType::Boolean => "boolean",
+            BMinorType::Char => "char",
+            BMinorType::Integer => "integer",
+            BMinorType::String => "string",
+            BMinorType::Array => "array",
+            BMinorType::Map => "map",
+            BMinorType::Function => "function",
+        };
+        write!(f, "{}", value)
+    }
 }
 
 impl TryFrom<&Token<'_>> for BMinorType {
